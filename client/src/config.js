@@ -1,0 +1,1 @@
+export const AuthenticationContractAddress = "0x6DeCf18Aa1Ec560BC2dC7d9C0D41DEC2A2fe1909";

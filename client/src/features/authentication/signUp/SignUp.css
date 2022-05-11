@@ -1,0 +1,72 @@
+.signUp{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba(0,94,255,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25%;
+    height: 600px;
+    position: relative;
+    justify-content: space-evenly;
+}
+.signUp__title{
+    margin: 0 0 20px 0;
+    font-weight: bold;
+    font-size: 1.8rem;
+}
+.signUp__addressAccount,
+.signUp__firstName,
+.signUp__familyName,
+.signUp__typeUser,
+.signUp__password,
+.signUp__passwordConfirm{
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.signUp__addressAccount__label,
+.signUp__firstName__label,
+.signUp__familyName__label,
+.signUp__typeUser__label,
+.signUp__password__label,
+.signUp__passwordConfirm__label{
+    margin-bottom: 5px;
+}
+.signUp__firstName__input,
+.signUp__familyName__input,
+.signUp__password__input,
+.signUp__passwordConfirm__input{
+    background-color: rgba(71,110,255,0.5);
+    outline: none;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 5px;
+}
+.signUp__addressAccount__address{
+    align-self: center;
+}
+.signUp__btnSignUp{
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #FBFBFB;
+    color: black;
+    border: none;
+    border-radius: 5px;
+}
+.signUp__btnLogin{
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    border-radius: 5px;
+    border: none;
+    background-color: #FBFBFB;
+    padding: 5px;
+}
+.signUp__btnSignUp:hover,
+.signUp__btnLogin:hover{
+    cursor: pointer;
+    background-color: lightgrey;
+}
