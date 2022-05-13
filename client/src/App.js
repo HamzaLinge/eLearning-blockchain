@@ -9,14 +9,15 @@ import {Routes} from "react-router";
 
 function App() {
   return (
-      <div className={"app"}>
-        <Header />
-        <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/signUp" element={<SignUp />} />
-        </Routes>
-
-      </div>
+      <>
+          <Header />
+          <div className={"app"}>
+              <Routes>
+                  <Route path="/" element={<Login />} />
+                  <Route path="/signUp" element={<SignUp />} />
+              </Routes>
+          </div>
+      </>
   );
 }
 

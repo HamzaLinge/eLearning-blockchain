@@ -3,11 +3,18 @@ import "./SignUp.css"
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getAddressAccount,
+    resetError,
     selectAddressAccount, selectError, selectLoading,
-    selectUser,
     signUp__blockchain,
 } from "../authenticationSlice";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import InputLabel from "@mui/material/InputLabel";
+import Alert from "@mui/material/Alert";
+import LoadingButton from '@mui/lab/LoadingButton';
 
 export const SignUp = () => {
 
@@ -15,7 +22,6 @@ export const SignUp = () => {
     const dispatch = useDispatch()
 
     const addressAccount = useSelector(selectAddressAccount)
-    const user = useSelector(selectUser)
     const loading = useSelector(selectLoading)
     const error = useSelector(selectError)
 
@@ -24,7 +30,8 @@ export const SignUp = () => {
     const [typeUser, setTypeUser] = useState("")
     const [password, setPassword] = useState("")
     const [passwordConfirm, setPasswordConfirm] = useState("")
-    
+    const [errorPassword, setErrorPassword] = useState(false)
+
     const goToLogin = (e) => {
         e.preventDefault()
         navigate("/")
@@ -32,68 +39,69 @@ export const SignUp = () => {
 
     const signUp = (e) => {
         e.preventDefault()
-        dispatch(signUp__blockchain({firstName, familyName, typeUser, password}))
+        if(password !== passwordConfirm) setErrorPassword(true)
+        else dispatch(signUp__blockchain({firstName, familyName, typeUser, password}))
     }
 
     useEffect(()=>{
-        dispatch(getAddressAccount())
+        dispatch(resetError())
     }, [])
-    
-    useEffect(()=>{
-        if(user.addressAccount !== ""){
-            console.log("Sign up success !")
-            console.log(user)
-        }
-    }, [user])
 
     return(
-        <form className="signUp">
+        <form  className="signUp">
             <p className="signUp__title">SignUp</p>
-            <div className="signUp__addressAccount">
-                <p className="signUp__addressAccount__label">Account's Address :</p>
-                <p className="signUp__addressAccount__address">
-                    {
-                        addressAccount ? addressAccount.toString() : <i>None</i>
-                    }
-                </p>
-            </div>
-            <div className="signUp__firstName">
-                <p className="signUp__firstName__label">First Name</p>
-                <input type="text" className="signUp__firstName__input"
+            <TextField className={"signUp__input"} label="Address Account" variant="standard"
+                       value={addressAccount}
+                       disabled={true}
+            />
+            <TextField className={"signUp__input"} label="First Name" variant="outlined"
                        value={firstName}
                        onChange={e => setFirstName(e.target.value)}
-                />
-            </div>
-            <div className="signUp__familyName">
-                <p className="signUp__familyName__label">Family Name</p>
-                <input type="text" className="signUp__familyName__input"
+            />
+            <TextField className={"signUp__input"} label="Family Name" variant="outlined"
                        value={familyName}
                        onChange={e => setFamilyName(e.target.value)}
-                />
-            </div>
-            <div className="signUp__typeUser">
-                <p className="signUp__typeUser__label">Type</p>
-                <select className="signUp__typeUser__select" value={typeUser}
-                        onChange={e => {
-                            setTypeUser(e.target.value)
-                        }}
+            />
+            <FormControl variant="filled" className={"signUp__select"}>
+                <InputLabel id="select-label">Type</InputLabel>
+                <Select
+                        labelId="select-label"
+                        id="demo-simple-select"
+                        value={typeUser}
+                        label="Type"
+                        onChange={e => setTypeUser(e.target.value)}
                 >
-                    <option className="signUp__typeUser__select__option">Student</option>
-                    <option className="signUp__typeUser__select__option">Employee</option>
-                </select>
-            </div>
-            <div className="signUp__password">
-                <p className="signUp__password__label">Password</p>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="signUp__password__input"/>
-            </div>
-            <div className="signUp__passwordConfirm">
-                <p className="signUp__passwordConfirm__label">Password Confirm</p>
-                <input type="password" disabled={!password} value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} className="signUp__passwordConfirm__input"/>
-            </div>
-            <button className="signUp__btnSignUp"
-                    // disabled={!addressAccount || !firstName || !familyName || !password || !passwordConfirm}
-                    onClick={signUp}>Sign Up</button>
-            <button className="signUp__btnLogin" onClick={goToLogin}>Login</button>
+                    <MenuItem value={"student"}>Student</MenuItem>
+                    <MenuItem value={"employee"}>Employee</MenuItem>
+                </Select>
+            </FormControl>
+            <TextField className={"signUp__input"} label="Password" variant="outlined" type={"password"}
+                       value={password}
+                       onChange={e => setPassword(e.target.value)}
+            />
+            <TextField className={"signUp__input"} label="Password Confirm" variant="outlined" type={"password"}
+                       value={passwordConfirm}
+                       disabled={!password}
+                       onChange={e => setPasswordConfirm(e.target.value)}
+                       error={errorPassword}
+                       helperText={errorPassword ? "The password is not identical" : ""}
+            />
+            <LoadingButton type={"submit"} loading={loading} variant="contained"
+                    className="signUp__btnSignUp"
+                    disabled={!addressAccount || !firstName || !familyName || !password || !passwordConfirm}
+                    onClick={signUp}
+            >Sign Up</LoadingButton>
+            {
+                error.flag ?
+                    <Alert severity="error">{error.message}</Alert>
+                    :
+                    ""
+            }
+            <Button
+                    className="signUp__btnLogin"
+                    onClick={goToLogin}
+                    size="small"
+            >Login</Button>
         </form>
     )
 }

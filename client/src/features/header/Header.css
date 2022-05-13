@@ -1,0 +1,69 @@
+.header{
+    width: 100%;
+    height: 50px;
+    background-color: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    color: #FBFBFB !important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    border-radius: 0 0 5px 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.header__title{
+    font-style: italic;
+    position: relative;
+}
+.header__title:hover{
+    cursor: pointer;
+}
+.header__title::before{
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -3px;
+    width: 0;
+    height: 1px;
+    background-color: #FBFBFB;
+    transition: 0.3s;
+}
+.header__title:hover::before{
+    width: 50%;
+}
+.header__title::after{
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    background-color: #FBFBFB;
+    width: 0;
+    left: 50%;
+    height: 1px;
+    transition: 0.3s;
+}
+.header__title:hover::after{
+    width: 50%;
+    left: 0;
+}
+.header__user{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.header__user__btnLogOut,
+.header__user__btnLogIn,
+.header__user__btnSignUp{
+    width: 100px !important;
+}
+.header__user__information{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-style: italic;
+}
+.header__user__information, .header__user__information__firstName{
+    margin-right: 10px;
+}

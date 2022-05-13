@@ -45,8 +45,11 @@ contract Authentication {
         return false;
     }
 
-    function logIn() public view returns(address, string memory, string memory, string memory) {
-        return (msg.sender, users[msg.sender].firstName, users[msg.sender].familyName, users[msg.sender].typeUser);
+    function logIn(string memory _password) public view returns(address, string memory, string memory, string memory) {
+        if(keccak256(bytes(users[msg.sender].password)) == keccak256(bytes(_password))) {
+            return (msg.sender, users[msg.sender].firstName, users[msg.sender].familyName, users[msg.sender].typeUser);
+        }
+        return (msg.sender, "", "", "");
     }
 
     function test() public view returns(string memory) {

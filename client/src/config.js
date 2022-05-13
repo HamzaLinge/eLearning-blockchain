@@ -1,1 +1,3 @@
-export const AuthenticationContractAddress = "0xD59Eb157a3195B28a6B7399A79659872800dA059";
+export const AuthenticationContractAddress = "0xE95E538d50524936608044002798d5275301EF8d";
+// export const AuthenticationContractAddress = Authentication.ast.networks["5777"].address;
+

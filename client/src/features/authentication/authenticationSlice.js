@@ -32,21 +32,6 @@ export const getAddressAccount = createAsyncThunk(
     }
 )
 
-export const testFromBlockchain = createAsyncThunk(
-    'testFromBlockchain',
-    async (_) => {
-        if(window.ethereum !== 'undefined'){
-            const contractAuthentication = await initialProviderAuthentication()
-            try{
-                const test = await contractAuthentication.test()
-                console.log(test)
-            } catch (e) {
-                console.log('Error test : ', e);
-            }
-        }
-    }
-)
-
 export const signUp__blockchain = createAsyncThunk(
     'signUp__blockchain',
     async (signUpInputs) => {
@@ -59,6 +44,7 @@ export const signUp__blockchain = createAsyncThunk(
                 return {error: false, response: await contractAuthentication.logIn(signUpInputs.password)}
             } catch (e) {
                 console.log('Error sign up to the blockchain : ', e);
+                return {error: true, response: "Error to log in to the blockchain !"}
             }
         }
     }
@@ -77,6 +63,7 @@ export const logIn__blockchain = createAsyncThunk(
                 return {error: false, response: await contractAuthentication.logIn(_password)}
             } catch (e) {
                 console.log('Error log in to the blockchain : ', e);
+                return {error: true, response: "Error to log in to the blockchain !"}
             }
         }
     }
@@ -86,7 +73,18 @@ export const authenticationSlice = createSlice({
     name: 'authentication',
     initialState,
     reducers: {
-
+        handleLogOut : state => {
+            state.user = {
+                addressAccount: "",
+                firstName : "",
+                familyName: "",
+                typeUser: ""
+            }
+        },
+        resetError : state => {
+            state.error.flag = false
+            state.error.message = ""
+        }
     },
     extraReducers: {
         // Get Address
@@ -103,15 +101,14 @@ export const authenticationSlice = createSlice({
                 state.error.flag = true
                 state.error.message = action.payload.msg
             } else{
-                state.user.addressAccount = action.payload[0]
-                state.user.firstName = action.payload[1]
-                state.user.familyName = action.payload[2]
-                state.user.typeUser = action.payload[3]
+                state.user.addressAccount = action.payload.response[0]
+                state.user.firstName = action.payload.response[1]
+                state.user.familyName = action.payload.response[2]
+                state.user.typeUser = action.payload.response[3]
             }
             state.loading = false
         },
-        [signUp__blockchain.rejected] : (state, action) => {
-            console.log("Error sign up : " + action.payload)
+        [signUp__blockchain.rejected] : (state) => {
             state.error.flag = true
             state.error.message = "Error signing up from the blockchain !"
             state.loading = false
@@ -126,15 +123,14 @@ export const authenticationSlice = createSlice({
                 state.error.flag = true
                 state.error.message = action.payload.msg
             } else {
-                state.user.addressAccount = action.payload[0]
-                state.user.firstName = action.payload[1]
-                state.user.familyName = action.payload[2]
-                state.user.typeUser = action.payload[3]
+                state.user.addressAccount = action.payload.response[0]
+                state.user.firstName = action.payload.response[1]
+                state.user.familyName = action.payload.response[2]
+                state.user.typeUser = action.payload.response[3]
             }
             state.loading = false
         },
-        [logIn__blockchain.rejected] : (state, action) => {
-            console.log("Error log in : " + action.payload)
+        [logIn__blockchain.rejected] : (state) => {
             state.error.flag = true
             state.error.message = "Error log in from the blockchain !"
             state.loading = false
@@ -142,7 +138,7 @@ export const authenticationSlice = createSlice({
     },
 });
 
-// export const {} = authenticationSlice.actions;
+export const {handleLogOut, resetError} = authenticationSlice.actions;
 
 export const selectAddressAccount = state => state.authentication.addressAccount
 export const selectUser = state => state.authentication.user
