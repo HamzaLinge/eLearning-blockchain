@@ -2,17 +2,26 @@ import React, {useEffect, useState} from 'react'
 import "./Login.css"
 import { useNavigate } from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {logIn__blockchain, resetError, selectAddressAccount, selectError, selectLoading} from "../authenticationSlice";
+import {
+    logIn__blockchain,
+    resetError,
+    selectAddressAccount,
+    selectError,
+    selectLoading,
+    selectUser
+} from "../authenticationSlice";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
+import {TYPE_EMPLOYEE, TYPE_STUDENT} from "../../../config";
 
 export const Login = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+    const user = useSelector(selectUser)
     const loading = useSelector(selectLoading)
     const error = useSelector(selectError)
 
@@ -31,6 +40,13 @@ export const Login = () => {
     useEffect(() => {
         dispatch(resetError())
     }, [])
+
+    useEffect(() => {
+        if(user.addressAccount) {
+            if(user.typeUser === TYPE_EMPLOYEE) navigate(TYPE_EMPLOYEE)
+            else navigate(TYPE_STUDENT)
+        }
+    }, [user])
 
     return(
         <form className="login">

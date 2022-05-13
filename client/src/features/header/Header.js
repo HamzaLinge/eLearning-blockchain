@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react'
 import "./Header.css"
 import {useDispatch, useSelector} from "react-redux";
-import {getAddressAccount, handleLogOut, selectUser} from "../authentication/authenticationSlice";
+import {getAddressAccount, handleLogOut, selectAddressAccount, selectUser} from "../authentication/authenticationSlice";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
+import {TYPE_EMPLOYEE, TYPE_STUDENT} from "../../config";
 
 function Header() {
 
@@ -11,6 +12,7 @@ function Header() {
     const dispatch = useDispatch()
 
     const user = useSelector(selectUser)
+    const addressAccount = useSelector(selectAddressAccount)
 
     const signUp = () => {
         navigate("/signUp");
@@ -28,6 +30,10 @@ function Header() {
 
     useEffect(() => {
         if(!user.addressAccount) navigate("/")
+        else{
+            if(user.typeUser === TYPE_EMPLOYEE) navigate(TYPE_EMPLOYEE)
+            else navigate(TYPE_STUDENT)
+        }
     }, [user])
 
     return (

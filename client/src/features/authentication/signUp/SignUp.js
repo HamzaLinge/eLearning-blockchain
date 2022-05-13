@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import Alert from "@mui/material/Alert";
 import LoadingButton from '@mui/lab/LoadingButton';
+import {TYPE_EMPLOYEE, TYPE_STUDENT} from "../../../config";
 
 export const SignUp = () => {
 
@@ -71,8 +72,8 @@ export const SignUp = () => {
                         label="Type"
                         onChange={e => setTypeUser(e.target.value)}
                 >
-                    <MenuItem value={"student"}>Student</MenuItem>
-                    <MenuItem value={"employee"}>Employee</MenuItem>
+                    <MenuItem value={TYPE_STUDENT}>Student</MenuItem>
+                    <MenuItem value={TYPE_EMPLOYEE}>Employee</MenuItem>
                 </Select>
             </FormControl>
             <TextField className={"signUp__input"} label="Password" variant="outlined" type={"password"}
