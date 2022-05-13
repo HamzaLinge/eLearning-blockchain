@@ -44,7 +44,8 @@ export const signUp__blockchain = createAsyncThunk(
                 return {error: false, response: await contractAuthentication.logIn(signUpInputs.password)}
             } catch (e) {
                 console.log('Error sign up to the blockchain : ', e);
-                return {error: true, response: "Error to log in to the blockchain !"}
+                console.log("wesh")
+                return {error: true, msg: "Error to sign in to the blockchain !"}
             }
         }
     }
@@ -63,7 +64,7 @@ export const logIn__blockchain = createAsyncThunk(
                 return {error: false, response: await contractAuthentication.logIn(_password)}
             } catch (e) {
                 console.log('Error log in to the blockchain : ', e);
-                return {error: true, response: "Error to log in to the blockchain !"}
+                return {error: true, msg: "Error to log in to the blockchain !"}
             }
         }
     }
@@ -97,6 +98,7 @@ export const authenticationSlice = createSlice({
             state.error.flag = false
         },
         [signUp__blockchain.fulfilled] : (state, action) => {
+            console.log("wesh 2")
             if(action.payload.error){
                 state.error.flag = true
                 state.error.message = action.payload.msg
@@ -109,6 +111,7 @@ export const authenticationSlice = createSlice({
             state.loading = false
         },
         [signUp__blockchain.rejected] : (state) => {
+            console.log("rejected sign up")
             state.error.flag = true
             state.error.message = "Error signing up from the blockchain !"
             state.loading = false
