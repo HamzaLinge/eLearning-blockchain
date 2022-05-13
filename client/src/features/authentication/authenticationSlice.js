@@ -12,7 +12,10 @@ const initialState = {
         typeUser: ""
     },
     loading: false,
-    signedUp: false
+    error: {
+        flag: false,
+        message: ""
+    }
 }
 
 async function initialProviderAuthentication () {
@@ -50,7 +53,10 @@ export const signUp__blockchain = createAsyncThunk(
         if(window.ethereum !== 'undefined'){
             const contractAuthentication = await initialProviderAuthentication()
             try{
+                const response = await contractAuthentication.areYouAlreadySignUp()
+                if(response) return {error: true, msg: "You're already signed up !"};
                 await contractAuthentication.signUp(signUpInputs.firstName, signUpInputs.familyName, signUpInputs.typeUser, signUpInputs.password)
+                return {error: false, response: await contractAuthentication.logIn(signUpInputs.password)}
             } catch (e) {
                 console.log('Error sign up to the blockchain : ', e);
             }
@@ -64,9 +70,13 @@ export const logIn__blockchain = createAsyncThunk(
         if(window.ethereum !== 'undefined'){
             const contractAuthentication = await initialProviderAuthentication()
             try{
-                return await contractAuthentication.logIn(_password)
+                const response = await contractAuthentication.areYouAlreadySignUp()
+                if(!response) return {error: true, msg: "You have to sign up first !"}
+                const response2 = await contractAuthentication.doesPasswordCorrect(_password)
+                if(!response2) return {error: true, msg: "Incorrect password !"}
+                return {error: false, response: await contractAuthentication.logIn(_password)}
             } catch (e) {
-                console.log('Error sign up to the blockchain : ', e);
+                console.log('Error log in to the blockchain : ', e);
             }
         }
     }
@@ -79,39 +89,64 @@ export const authenticationSlice = createSlice({
 
     },
     extraReducers: {
-
+        // Get Address
         [getAddressAccount.fulfilled] : (state, action) => {
             state.addressAccount = action.payload
         },
-
+        // Sign Up
         [signUp__blockchain.pending] : state => {
             state.loading = true
+            state.error.flag = false
         },
         [signUp__blockchain.fulfilled] : (state, action) => {
-            state.signedUp = true
+            if(action.payload.error){
+                state.error.flag = true
+                state.error.message = action.payload.msg
+            } else{
+                state.user.addressAccount = action.payload[0]
+                state.user.firstName = action.payload[1]
+                state.user.familyName = action.payload[2]
+                state.user.typeUser = action.payload[3]
+            }
+            state.loading = false
         },
         [signUp__blockchain.rejected] : (state, action) => {
             console.log("Error sign up : " + action.payload)
+            state.error.flag = true
+            state.error.message = "Error signing up from the blockchain !"
+            state.loading = false
         },
-
+        // Log In
         [logIn__blockchain.pending] : state => {
             state.loading = true
+            state.error.flag = false
         },
         [logIn__blockchain.fulfilled] : (state, action) => {
-            state.user.addressAccount = action.payload[1]
-            state.user.firstName = action.payload[2]
-            state.user.familyName = action.payload[3]
-            state.user.typeUser = action.payload[4]
-            state.signedUp = false
+            if(action.payload.error){
+                state.error.flag = true
+                state.error.message = action.payload.msg
+            } else {
+                state.user.addressAccount = action.payload[0]
+                state.user.firstName = action.payload[1]
+                state.user.familyName = action.payload[2]
+                state.user.typeUser = action.payload[3]
+            }
+            state.loading = false
+        },
+        [logIn__blockchain.rejected] : (state, action) => {
+            console.log("Error log in : " + action.payload)
+            state.error.flag = true
+            state.error.message = "Error log in from the blockchain !"
+            state.loading = false
         }
     },
 });
 
-export const {} = authenticationSlice.actions;
+// export const {} = authenticationSlice.actions;
 
 export const selectAddressAccount = state => state.authentication.addressAccount
 export const selectUser = state => state.authentication.user
 export const selectLoading = state => state.authentication.loading
-export const selectSignedUp = state => state.authentication.signedUp
+export const selectError = state => state.authentication.error
 
 export default authenticationSlice.reducer;

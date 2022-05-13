@@ -3,11 +3,10 @@ import "./SignUp.css"
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getAddressAccount, logIn__blockchain,
-    selectAddressAccount, selectSignedUp,
+    getAddressAccount,
+    selectAddressAccount, selectError, selectLoading,
     selectUser,
     signUp__blockchain,
-    testFromBlockchain
 } from "../authenticationSlice";
 
 export const SignUp = () => {
@@ -17,9 +16,9 @@ export const SignUp = () => {
 
     const addressAccount = useSelector(selectAddressAccount)
     const user = useSelector(selectUser)
-    const signedUp = useSelector(selectSignedUp)
+    const loading = useSelector(selectLoading)
+    const error = useSelector(selectError)
 
-    // const [addressAccount, setAddressAccount] = useState(undefined)
     const [firstName, setFirstName] = useState("")
     const [familyName, setFamilyName] = useState("")
     const [typeUser, setTypeUser] = useState("")
@@ -33,7 +32,6 @@ export const SignUp = () => {
 
     const signUp = (e) => {
         e.preventDefault()
-        // dispatch(testFromBlockchain())
         dispatch(signUp__blockchain({firstName, familyName, typeUser, password}))
     }
 
@@ -45,13 +43,8 @@ export const SignUp = () => {
         if(user.addressAccount !== ""){
             console.log("Sign up success !")
             console.log(user)
-            // alert("User is connected !")
         }
     }, [user])
-
-    useEffect(() => {
-        if(signedUp) dispatch(logIn__blockchain(password))
-    }, [signedUp])
 
     return(
         <form className="signUp">
