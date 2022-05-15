@@ -1,16 +1,12 @@
-pragma solidity 0.8.9;
+pragma solidity 0.8.13;
 
 contract Authentication {
 
-    struct QCM {
-        uint idQcm;
+    struct QuestionAnswer {
+        uint idCourse;
+        uint idQuestionAnswer;
         bool answerFlag;
         uint idAnswer;
-    }
-
-    struct Course {
-        uint idCourse;
-        QCM[] qcm;
     }
 
     struct User{
@@ -19,10 +15,10 @@ contract Authentication {
         string firstName;
         string familyName;
         string typeUser;
-        Course[] courses;
     }
 
     mapping(address => User) private users;
+    mapping(address => QuestionAnswer[]) private questionsAnswers;
 
     constructor () {
 
@@ -54,33 +50,28 @@ contract Authentication {
         if(keccak256(bytes(users[msg.sender].password)) == keccak256(bytes(_password))) {
             return (msg.sender, users[msg.sender].firstName, users[msg.sender].familyName, users[msg.sender].typeUser);
         }
-        return (msg.sender, "", "", "");
+        return (address(0), "", "", "");
     }
 
     //    Courses ---------------------------------------------------------
 
-    function getCoursesOfStudent(address _idStudent, uint _idCourse) public view returns(Course[] memory){
-        return users[_idStudent].courses;
+    function getCoursesOfStudent(address _idStudent) public view returns(QuestionAnswer[] memory){
+        return questionsAnswers[_idStudent];
     }
 
-    function newCourseForStudent(address _adrStudent, uint _idCourse, uint _idQcm, bool _answerFlag, uint _idAnswer) public returns (bool) {
-        QCM memory qcm = QCM(_idQcm, _answerFlag, _idAnswer);
-        Course memory course;
-        course.idCourse = _idCourse;
-        course.qcm = new QCM[];
-        course.qcm.push(qcm);
-        users[_adrStudent].courses.push(course);
+    function newCourseForStudent(address _adrStudent, uint _idCourse, uint _idAnswerQuestion, bool _answerFlag, uint _idAnswer) public returns (bool) {
+        QuestionAnswer memory questionAnswer;
+        questionAnswer.idQuestionAnswer = _idAnswerQuestion;
+        questionAnswer.answerFlag = _answerFlag;
+        questionAnswer.idAnswer = _idAnswer;
+        questionAnswer.idCourse = _idCourse;
+        questionsAnswers[_adrStudent].push(questionAnswer);
         return true;
     }
 
-    function addQcmOfCourseForStudent(address _adrStudent, uint _idCourse, uint _idQcm, bool _answerFlag, uint _idAnswer) public returns (bool) {
-        QCM memory qcm = QCM(_idQcm, _answerFlag, _idAnswer);
-        for(uint8 i = 0; i < users[_adrStudent].courses.length; i++){
-            if(users[_adrStudent].courses[i].idCourse == _idCourse) {
-                users[_adrStudent].courses[i].qcm.push(qcm);
-                break;
-            }
-        }
+    function addQuestionAnswerOfCourseForStudent(address _adrStudent, uint _idCourse, uint _answerQuestion, bool _answerFlag, uint _idAnswer) public returns (bool) {
+        QuestionAnswer memory questionAnswer = QuestionAnswer(_idCourse, _answerQuestion, _answerFlag, _idAnswer);
+        questionsAnswers[_adrStudent].push(questionAnswer);
         return true;
     }
 }
