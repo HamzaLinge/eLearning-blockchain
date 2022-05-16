@@ -41,13 +41,6 @@ export const Login = () => {
         dispatch(resetError())
     }, [])
 
-    useEffect(() => {
-        if(user.addressAccount) {
-            if(user.typeUser === TYPE_EMPLOYEE) navigate(TYPE_EMPLOYEE)
-            else navigate(TYPE_STUDENT)
-        }
-    }, [user])
-
     return(
         <form className="login">
             <p className="login__title">Login</p>

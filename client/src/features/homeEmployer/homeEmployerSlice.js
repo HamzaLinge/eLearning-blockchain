@@ -13,8 +13,8 @@ async function initialProviderAuthentication () {
     return new ethers.Contract(AuthenticationContractAddress, Authentication.abi, signer);
 }
 
-export const homeEmployeeSlice = createSlice({
-    name: 'homeEmployee',
+export const homeEmployerSlice = createSlice({
+    name: 'homeEmployer',
     initialState,
     reducers: {
 
@@ -24,8 +24,8 @@ export const homeEmployeeSlice = createSlice({
     },
 });
 
-// export const {} = homeEmployeeSlice.actions;
+// export const {} = homeEmployerSlice.actions;
 
 
 
-export default homeEmployeeSlice.reducer;
+export default homeEmployerSlice.reducer;

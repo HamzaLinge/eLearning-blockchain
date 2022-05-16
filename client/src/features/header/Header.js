@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import "./Header.css"
 import {useDispatch, useSelector} from "react-redux";
 import {getAddressAccount, handleLogOut, selectAddressAccount, selectUser} from "../authentication/authenticationSlice";
@@ -14,31 +14,58 @@ function Header() {
     const user = useSelector(selectUser)
     const addressAccount = useSelector(selectAddressAccount)
 
-    const signUp = () => {
-        navigate("/signUp");
-    }
-    const logIn = () => {
-        navigate("/")
-    }
-    const logOut = () => {
-        dispatch(handleLogOut())
-    }
+    const refCourses = useRef()
+    const refProfile = useRef()
 
     useEffect(() => {
         dispatch(getAddressAccount())
     }, [])
 
     useEffect(() => {
-        if(!user.addressAccount) navigate("/")
+        if(!user.typeUser) navigate("/")
         else{
             if(user.typeUser === TYPE_EMPLOYEE) navigate(TYPE_EMPLOYEE)
-            else navigate(TYPE_STUDENT)
+            else {
+                navigate("/student/courses")
+                goToCourses()
+            }
         }
-    }, [user])
+    }, [user.typeUser])
+
+    const goToCourses = () => {
+        refProfile.current.classList.remove("header__nav__option__selected")
+        refCourses.current.classList.add("header__nav__option__selected")
+    }
+
+    const goToProfile = () => {
+        refCourses.current.classList.remove("header__nav__option__selected")
+        refProfile.current.classList.add("header__nav__option__selected")
+    }
 
     return (
         <div className="header">
             <p className="header__title">E-Learning Chain</p>
+            {
+                user ?
+                    <div className="header__nav">
+                        {
+                            user.typeUser === TYPE_STUDENT ?
+                                <>
+                                    <p ref={refCourses} className="header__nav__option" onClick={goToCourses}>Courses</p>
+                                    <p ref={refProfile} className="header__nav__option" onClick={goToProfile}>Profile</p>
+                                </>
+                                :
+                                user.typeUser === TYPE_EMPLOYEE ?
+                                    <p className="header__nav__option">Search</p>
+                                    :
+                                    ""
+
+                        }
+                    </div>
+                    :
+                    ""
+            }
+
             <div className="header__user">
                 {
                     user.addressAccount ?
@@ -47,12 +74,12 @@ function Header() {
                                 <p className="header__user__information__firstName">{user.firstName}</p>
                                 <p className="header__user__information__familyName">{user.familyName.toUpperCase()}</p>
                             </div>
-                            <Button  className={"header__user__btnLogOut"} onClick={logOut}>Log Out</Button>
+                            <Button  className={"header__user__btnLogOut"} onClick={() => dispatch(handleLogOut())}>Log Out</Button>
                         </>
                         :
                         <>
-                            <Button className={"header__user__btnLogIn"} onClick={logIn}>Log In</Button>
-                            <Button className={"header__user__btnSignUp"} onClick={signUp}>Sign Up</Button>
+                            <Button className={"header__user__btnLogIn"} onClick={() => navigate("/")}>Log In</Button>
+                            <Button className={"header__user__btnSignUp"} onClick={() => navigate("/signUp")}>Sign Up</Button>
                         </>
                 }
             </div>

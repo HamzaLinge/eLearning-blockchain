@@ -67,3 +67,33 @@
 .header__user__information, .header__user__information__firstName{
     margin-right: 10px;
 }
+
+.header__nav{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 400px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.header__nav__option{
+    width: 50%;
+    height: 100%;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.header__nav__option:hover{
+    background-color: rgba(63,63,63,0.5);
+    cursor: pointer;
+}
+.header__nav__option__selected{
+    background-color: lightgrey;
+    color: black;
+    pointer-events: none;
+}

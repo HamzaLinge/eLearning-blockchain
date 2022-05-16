@@ -18,7 +18,9 @@ contract Courses{
 
     uint private nbrCourses = 0;
     mapping (uint => Course) private courses;
+    mapping (uint => uint) private countQuestionsAnswers;
     mapping (uint => QuestionAnswer[]) private questionsAnswers;
+    mapping (uint => uint) private countCertifiedStudents;
     mapping (uint => address[]) private certifiedStudents;
 
     function newCourse (string memory _title, string memory _resume, string memory _urlPdf, string memory _urlImage) public returns (bool){
@@ -29,6 +31,12 @@ contract Courses{
         courses[nbrCourses].urlImage = _urlImage;
         courses[nbrCourses].timestamp = block.timestamp;
         nbrCourses++;
+        countQuestionsAnswers[nbrCourses] = 1;
+        return true;
+    }
+
+    function ifCoursesIsEmpty() public view returns (bool) {
+        if(nbrCourses > 0) return false;
         return true;
     }
 
@@ -46,11 +54,18 @@ contract Courses{
         questionAnswer.question = _question;
         questionAnswer.answer = _answer;
         questionsAnswers[_idCourse].push(questionAnswer);
+        countQuestionsAnswers[_idCourse]++;
         return true;
     }
 
-    function getCourseById(uint _idCourse) public view returns (Course memory){
-        return courses[_idCourse];
+    function getCourseById(uint _idCourse) public view returns (Course memory, QuestionAnswer[] memory){
+        uint _countQA = countQuestionsAnswers[_idCourse];
+        QuestionAnswer[] memory arrQuestionsAnswers = new QuestionAnswer[](_countQA);
+        for(uint8 i = 1; i <= _countQA; i++){
+            QuestionAnswer storage questionAnswer = questionsAnswers[_idCourse][i];
+            arrQuestionsAnswers[i] = questionAnswer;
+        }
+        return (courses[_idCourse], arrQuestionsAnswers);
     }
 
     function addAddressCertifiedStudent(uint _idCourse, address _adrStudent) public returns(bool){
