@@ -4,7 +4,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {getAddressAccount, handleLogOut, selectAddressAccount, selectUser} from "../authentication/authenticationSlice";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
-import {TYPE_EMPLOYEE, TYPE_STUDENT} from "../../config";
+import {
+    TYPE_EMPLOYEE,
+    TYPE_STUDENT,
+    URL_ADD_COURSE,
+    URL_EMPLOYER,
+    URL_STUDENT_COURSES,
+    URL_STUDENT_PROFILE
+} from "../../config";
 
 function Header() {
 
@@ -16,6 +23,7 @@ function Header() {
 
     const refCourses = useRef()
     const refProfile = useRef()
+    const refAddCourse = useRef()
 
     useEffect(() => {
         dispatch(getAddressAccount())
@@ -24,9 +32,9 @@ function Header() {
     useEffect(() => {
         if(!user.typeUser) navigate("/")
         else{
-            if(user.typeUser === TYPE_EMPLOYEE) navigate(TYPE_EMPLOYEE)
+            if(user.typeUser === TYPE_EMPLOYEE) navigate(URL_EMPLOYER)
             else {
-                navigate("/student/courses")
+                navigate(URL_STUDENT_COURSES)
                 goToCourses()
             }
         }
@@ -34,12 +42,22 @@ function Header() {
 
     const goToCourses = () => {
         refProfile.current.classList.remove("header__nav__option__selected")
+        refAddCourse.current.classList.remove("header__nav__option__selected")
         refCourses.current.classList.add("header__nav__option__selected")
+        navigate(URL_STUDENT_COURSES)
     }
 
     const goToProfile = () => {
         refCourses.current.classList.remove("header__nav__option__selected")
+        refAddCourse.current.classList.remove("header__nav__option__selected")
         refProfile.current.classList.add("header__nav__option__selected")
+        navigate(URL_STUDENT_PROFILE)
+    }
+    const goToAddCourse = () => {
+        refProfile.current.classList.remove("header__nav__option__selected")
+        refCourses.current.classList.remove("header__nav__option__selected")
+        refAddCourse.current.classList.add("header__nav__option__selected")
+        navigate(URL_ADD_COURSE)
     }
 
     return (
@@ -53,6 +71,7 @@ function Header() {
                                 <>
                                     <p ref={refCourses} className="header__nav__option" onClick={goToCourses}>Courses</p>
                                     <p ref={refProfile} className="header__nav__option" onClick={goToProfile}>Profile</p>
+                                    <p ref={refAddCourse} className={"header__nav__option"} onClick={goToAddCourse}>Add Course</p>
                                 </>
                                 :
                                 user.typeUser === TYPE_EMPLOYEE ?

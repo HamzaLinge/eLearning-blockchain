@@ -1,5 +1,11 @@
-export const AuthenticationContractAddress = "0x1454b35885c449064C32914e10A012169Cb1515b"
-export const CoursesContractAddress = "0xF0D82C1312cABA14e3D76d9cc0cC6666dCd94d97"
+export const AuthenticationContractAddress = "0x95272C98329D25A914567a44933d19F4bE0f0Ae4"
+export const CoursesContractAddress = "0x6269817050F199E008cCefA7Ba931E8e3289e492"
 
 export const TYPE_EMPLOYEE = "employee"
 export const TYPE_STUDENT = "student"
+
+export const URL_STUDENT_COURSES = "/student/courses"
+export const URL_STUDENT_PROFILE = "/student/profile"
+export const URL_EMPLOYER = "/employer"
+export const URL_ADD_COURSE = "/setCourse"
+

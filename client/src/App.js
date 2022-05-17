@@ -7,6 +7,8 @@ import Header from "./features/header/Header";
 import {Routes} from "react-router";
 import Courses from "./features/homeStudent/Courses/Courses";
 import Profile from "./features/homeStudent/Profile/Profile";
+import {URL_ADD_COURSE, URL_STUDENT_COURSES, URL_STUDENT_PROFILE} from "./config";
+import {AddCourse} from "./features/setCourse/addCourse/AddCourse";
 
 
 function App() {
@@ -18,8 +20,9 @@ function App() {
                   <Route path="/" element={<Login />} />
                   <Route path="/signUp" element={<SignUp />} />
                   {/*<Route path="/employee" element={<HomeStudent />} />*/}
-                  <Route path="/student/courses" element={<Courses />} />
-                  <Route path="/student/profile" element={<Profile />} />
+                  <Route path={URL_STUDENT_COURSES} element={<Courses />} />
+                  <Route path={URL_STUDENT_PROFILE} element={<Profile />} />
+                  <Route path={URL_ADD_COURSE} element={<AddCourse />} />
               </Routes>
           </div>
       </>
