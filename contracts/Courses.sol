@@ -1,6 +1,6 @@
 pragma solidity 0.8.13;
 
-contract Courses{
+contract Courses {
 
     struct QuestionAnswer {
         string question;
@@ -16,14 +16,19 @@ contract Courses{
         uint timestamp;
     }
 
-    uint private nbrCourses = 0;
+    constructor () {
+        nbrCourses = 0;
+    }
+
+    uint private nbrCourses;
     mapping (uint => Course) private courses;
     mapping (uint => uint) private countQuestionsAnswers;
     mapping (uint => QuestionAnswer[]) private questionsAnswers;
     mapping (uint => uint) private countCertifiedStudents;
     mapping (uint => address[]) private certifiedStudents;
 
-    function newCourse (string memory _title, string memory _resume, string memory _urlPdf, string memory _urlImage) public returns (bool){
+    function newCourse (string memory _title, string memory _resume, string memory _urlPdf, string memory _urlImage) public returns (bool _success){
+
         courses[nbrCourses].idCourse = nbrCourses;
         courses[nbrCourses].title = _title;
         courses[nbrCourses].resume = _resume;
@@ -35,21 +40,21 @@ contract Courses{
         return true;
     }
 
-    function ifCoursesIsEmpty() public view returns (bool) {
+    function ifCoursesIsEmpty() public view returns (bool _success) {
         if(nbrCourses > 0) return false;
         return true;
     }
 
     function getCourses() public view returns (Course[] memory){
         Course[] memory arrCourses = new Course[](nbrCourses);
-        for(uint8 i = 1; i <= nbrCourses; i++){
+        for(uint8 i = 0; i < nbrCourses; i++){
             Course storage course = courses[i];
             arrCourses[i] = course;
         }
         return arrCourses;
     }
 
-    function addQuestionAnswerToCourse(uint _idCourse, string memory _question, string memory _answer) public returns(bool){
+    function addQuestionAnswerToCourse(uint _idCourse, string memory _question, string memory _answer) public returns(bool _success){
         QuestionAnswer memory questionAnswer;
         questionAnswer.question = _question;
         questionAnswer.answer = _answer;
@@ -61,14 +66,14 @@ contract Courses{
     function getCourseById(uint _idCourse) public view returns (Course memory, QuestionAnswer[] memory){
         uint _countQA = countQuestionsAnswers[_idCourse];
         QuestionAnswer[] memory arrQuestionsAnswers = new QuestionAnswer[](_countQA);
-        for(uint8 i = 1; i <= _countQA; i++){
+        for(uint8 i = 0; i < _countQA; i++){
             QuestionAnswer storage questionAnswer = questionsAnswers[_idCourse][i];
             arrQuestionsAnswers[i] = questionAnswer;
         }
         return (courses[_idCourse], arrQuestionsAnswers);
     }
 
-    function addAddressCertifiedStudent(uint _idCourse, address _adrStudent) public returns(bool){
+    function addAddressCertifiedStudent(uint _idCourse, address _adrStudent) public returns(bool _success){
         certifiedStudents[_idCourse].push(_adrStudent);
         return true;
     }

@@ -10,7 +10,7 @@ const initialState = {
     course: {},
 }
 
-async function initialProviderAuthentication () {
+async function initialProviderCourses () {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     return new ethers.Contract(CoursesContractAddress, Courses.abi, signer);
@@ -19,9 +19,9 @@ async function initialProviderAuthentication () {
 export const fetchCourses = createAsyncThunk(
     'fetchCourses',
     async (_) => {
-        return {errorFlag: false, content: []}
+        // return {errorFlag: false, content: []}
         if(window.ethereum !== 'undefined'){
-            const contractCourses = await initialProviderAuthentication()
+            const contractCourses = await initialProviderCourses()
             try{
                 const ifCoursesIsEmpty = await contractCourses.ifCoursesIsEmpty()
                 if(ifCoursesIsEmpty) return {errorFlag: false, content: []}
@@ -38,7 +38,7 @@ export const fetchCourseById = createAsyncThunk(
     'fetchCourseById',
     async (_idCourse) => {
         if(window.ethereum !== 'undefined'){
-            const contractCourses = await initialProviderAuthentication()
+            const contractCourses = await initialProviderCourses()
             try{
                 return {errorFlag: false, content: await contractCourses.getCourseById(_idCourse)}
             } catch (e) {
@@ -61,6 +61,7 @@ export const homeStudentSlice = createSlice({
             state.loadingCourses = true
         },
         [fetchCourses.fulfilled] : (state, action) => {
+            console.log(action.payload)
             if(action.payload.errorFlag) state.errorFetchCourses = action.payload.content
             else state.courses = action.payload.content
             state.loadingCourses = false

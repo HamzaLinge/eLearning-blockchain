@@ -1,39 +1,36 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import {AuthenticationContractAddress, CoursesContractAddress} from "../../config"
-import Authentication from "../../contracts/Authentication.json"
+import {CoursesContractAddress} from "../../config"
 import {ethers} from 'ethers'
-import {create, urlSource} from 'ipfs-http-client'
-import {Buffer} from "buffer"
+import {create} from 'ipfs-http-client'
 import Courses from "../../contracts/Courses.json";
 
 const initialState = {
-    loadingUploadCourse: false,
-    course: {}
+
 }
 
-async function initialProviderAuthentication () {
+async function initialProviderCourses () {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    return new ethers.Contract(AuthenticationContractAddress, Authentication.abi, signer);
+    return new ethers.Contract(CoursesContractAddress, Courses.abi, signer);
 }
 
 export const uploadFile = createAsyncThunk(
     'uploadFile',
     async ({_title, _resume, _bufferPdf, _bufferImage}) => {
-        console.log(_resume)
+        // console.log(_resume)
         if(window.ethereum !== 'undefined'){
-            const contractCourses = await initialProviderAuthentication()
+            const contractCourses = await initialProviderCourses()
             const ipfs = create({host: 'ipfs.infura.io', port: 5001, protocol: 'https'})
             try{
                 const hashPdf = await ipfs.add(_bufferPdf)
                 const hashImage = await ipfs.add(_bufferImage)
-                console.log(hashPdf)
-                console.log(hashImage)
-                // await contractCourses.newCourse("TitleBaghdad", "resumeBaghdad", c)
-                // return {errorFlag: false, content: await contractCourses.getCourseById(_idCourse)}
+                // console.log(hashPdf)
+                // console.log(hashImage)
+                await contractCourses.newCourse(_title, _resume, hashPdf.path, hashImage.path)
+                return {errorFlag: false, content: ""}
             } catch (e) {
-                console.log('Error : ', e);
-                return {errorFlag: true, content: "Error fetch Course by Id from the blockchain !"}
+                console.log('Error add course : ', e);
+                return {errorFlag: true, content: "Error add Course by to blockchain !"}
             }
         }
     }
@@ -42,16 +39,7 @@ export const uploadFile = createAsyncThunk(
 export const setCoursesSlice = createSlice({
     name: 'setCourse',
     initialState,
-    reducers: {
-        fileToBuffer : (state, action) => {
-            const reader = new window.FileReader()
-            reader.readAsArrayBuffer(action.payload)
-            reader.onloadend = () => {
-                // console.log(Buffer.from(reader.result))
-                state.buffer = Buffer.from((reader.result))
-            }
-        }
-    },
+    reducers: {},
     extraReducers: {
         [uploadFile.pending] : state => {
             console.log("uploadFile : Pending")
@@ -61,12 +49,13 @@ export const setCoursesSlice = createSlice({
         },
         [uploadFile.rejected] : (state, action) => {
             console.log("uploadFile : Rejected")
+            console.log(action.payload.content)
         }
     },
 });
 
 export const {fileToBuffer} = setCoursesSlice.actions;
 
-export const selectBuffer = state => state.setCourse.buffer
+export const selectLoadingUploadCourse = state => state.setCourse.loadingUploadCourse
 
 export default setCoursesSlice.reducer;
