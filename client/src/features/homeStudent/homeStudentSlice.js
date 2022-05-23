@@ -61,13 +61,13 @@ export const homeStudentSlice = createSlice({
             state.loadingCourses = true
         },
         [fetchCourses.fulfilled] : (state, action) => {
-            console.log(action.payload)
             if(action.payload.errorFlag) state.errorFetchCourses = action.payload.content
             else state.courses = action.payload.content
             state.loadingCourses = false
         },
         [fetchCourses.rejected] : (state, action) => {
             state.errorFetchCourses = action.payload.content
+            state.loadingCourses = false
         },
         // Fetch Course By Id
         [fetchCourseById.pending] : state => {
@@ -90,6 +90,7 @@ export const homeStudentSlice = createSlice({
         },
         [fetchCourseById.rejected] : (state, action) => {
             state.errorFetchCourses = action.payload.content
+            state.loadingCourses = false
         },
     },
 });
@@ -99,6 +100,6 @@ export const homeStudentSlice = createSlice({
 export const selectCourses = state => state.homeStudent.courses;
 export const selectLoadingCourses = state => state.homeStudent.loadingCourses;
 export const selectErrorFetchCourses = state => state.homeStudent.errorFetchCourses;
-export const course = state => state.homeStudent.course;
+export const selectCourse = state => state.homeStudent.course;
 
 export default homeStudentSlice.reducer;

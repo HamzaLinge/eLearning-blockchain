@@ -6,14 +6,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectLoadingUploadCourse, uploadFile} from "../setCourseSlice";
 import {Buffer} from "buffer";
 import LoadingButton from "@mui/lab/LoadingButton";
-import {courses_meta} from "../../../datas/courses_meta";
-import {pathCoursesMeta} from "../../../config"
 
 export const AddCourse = () => {
 
     const dispatch = useDispatch()
 
-    const [loadingUploadCourses, setLoadingUploadCourses] = useState(false)
+    const loadingUploadCourse = useSelector(selectLoadingUploadCourse)
 
     const [title, setTitle] = useState("")
     const [resume, setResume] = useState("")
@@ -22,9 +20,6 @@ export const AddCourse = () => {
 
     const uploadNewCourse = e => {
         e.preventDefault()
-
-        console.log(refPdf.current.files[0])
-        if(!refPdf.current === undefined || !refImage.current === undefined) return true;
         const readePdf = new window.FileReader()
         readePdf.readAsArrayBuffer(refPdf.current.files[0])
         readePdf.onloadend = () => {
@@ -36,30 +31,33 @@ export const AddCourse = () => {
         }
     }
 
-    const uploadCoursesFromJsonMetaData = e => {
-        e.preventDefault()
-        setLoadingUploadCourses(true)
-        courses_meta.forEach(courseMeta => {
-            // console.log(pathCoursesMeta + courseMeta.path + "/" + courseMeta.path + courseMeta.extImage)
-            const filePdf = new File(["blob"], pathCoursesMeta + courseMeta.path + "/" + courseMeta.path + ".pdf")
-            const fileImage = new File(["blob"], pathCoursesMeta + courseMeta.path + "/" + courseMeta.path + courseMeta.extImage)
-            const readerPdf = new window.FileReader()
-            readerPdf.readAsArrayBuffer(filePdf)
-            readerPdf.onloadend = () => {
-                const readerImage = new window.FileReader()
-                readerImage.readAsArrayBuffer(fileImage)
-                readerImage.onloadend = () => {
-                    dispatch(uploadFile({
-                        _title: courseMeta.title,
-                        _resume: courseMeta.resume,
-                        _bufferPdf: Buffer.from(readerPdf.result),
-                        _bufferImage: Buffer.from(readerImage.result)
-                    }))
-                }
-            }
-        })
-        setLoadingUploadCourses(false)
-    }
+    // const uploadCoursesFromJsonMetaData = e => {
+    //     e.preventDefault()
+    //     setLoadingUploadCourses(true)
+    //     courses_meta.forEach(courseMeta => {
+    //         console.log(pathCoursesMeta + courseMeta.path + "/" + courseMeta.path + ".pdf")
+    //         console.log(pathCoursesMeta + courseMeta.path + "/" + courseMeta.path + courseMeta.extImage)
+    //         const filePdf = new File(["arrayBuffer"], courseMeta.path + ".pdf")
+    //         const fileImage = new File(["arrayBuffer"], pathCoursesMeta + courseMeta.path + "/" + courseMeta.path + courseMeta.extImage)
+    //         console.log(filePdf)
+    //         console.log(fileImage)
+    //         const readerPdf = new window.FileReader()
+    //         readerPdf.readAsArrayBuffer(filePdf)
+    //         readerPdf.onloadend = () => {
+    //             const readerImage = new window.FileReader()
+    //             readerImage.readAsArrayBuffer(fileImage)
+    //             readerImage.onloadend = () => {
+    //                 dispatch(uploadFile({
+    //                     _title: courseMeta.title,
+    //                     _resume: courseMeta.resume,
+    //                     _bufferPdf: Buffer.from(readerPdf.result),
+    //                     _bufferImage: Buffer.from(readerImage.result)
+    //                 }))
+    //             }
+    //         }
+    //     })
+    //     setLoadingUploadCourses(false)
+    // }
 
     return (
         <form className={"addCourse"}>
@@ -90,9 +88,9 @@ export const AddCourse = () => {
                        accept="image/*"
                 />
             </Button>
-            <LoadingButton type={"submit"} loading={loadingUploadCourses} variant="contained"
+            <LoadingButton type={"submit"} loading={loadingUploadCourse} variant="contained"
                            className={"addCourse__upload"}
-                           onClick={uploadCoursesFromJsonMetaData}
+                           onClick={uploadNewCourse}
                            // disabled={!title || !resume}
             >Upload</LoadingButton>
         </form>

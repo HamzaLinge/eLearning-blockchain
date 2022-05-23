@@ -5,7 +5,7 @@ import {create} from 'ipfs-http-client'
 import Courses from "../../contracts/Courses.json";
 
 const initialState = {
-
+    loadingUploadCourse: false
 }
 
 async function initialProviderCourses () {
@@ -24,8 +24,8 @@ export const uploadFile = createAsyncThunk(
             try{
                 const hashPdf = await ipfs.add(_bufferPdf)
                 const hashImage = await ipfs.add(_bufferImage)
-                // console.log(hashPdf)
-                // console.log(hashImage)
+                console.log(hashPdf)
+                console.log(hashImage)
                 await contractCourses.newCourse(_title, _resume, hashPdf.path, hashImage.path)
                 return {errorFlag: false, content: ""}
             } catch (e) {
@@ -43,18 +43,22 @@ export const setCoursesSlice = createSlice({
     extraReducers: {
         [uploadFile.pending] : state => {
             console.log("uploadFile : Pending")
+            state.loadingUploadCourse = true
         },
         [uploadFile.fulfilled] : (state, action) => {
             console.log("uploadFile : fulfilled")
+            console.log(action.payload)
+            state.loadingUploadCourse = false
         },
         [uploadFile.rejected] : (state, action) => {
             console.log("uploadFile : Rejected")
             console.log(action.payload.content)
+            state.loadingUploadCourse = false
         }
     },
 });
 
-export const {fileToBuffer} = setCoursesSlice.actions;
+// export const {} = setCoursesSlice.actions;
 
 export const selectLoadingUploadCourse = state => state.setCourse.loadingUploadCourse
 
