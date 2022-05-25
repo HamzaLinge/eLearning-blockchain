@@ -22,30 +22,13 @@ contract Courses {
 
     struct QuestionAnswer {
         string question;
-        uint length;
-        mapping (uint => Answer) answers;
     }
 
     uint private nbrCourses;
     mapping (uint => Course) private courses;
-    mapping (uint => uint) private countQuestionsAnswers;
-    mapping (uint => QuestionAnswer[]) private questionsAnswers;
-    mapping (uint => uint) private countCertifiedStudents;
+    mapping (uint => string[]) private questions;
+    mapping (uint => mapping (uint => Answer[])) answers;
     mapping (uint => address[]) private certifiedStudents;
-
-    function addAnswersToQuestionsOfCourse(uint _idCourse, uint _indexQuestion, string[] memory _answers, bool[] memory _flags) public returns(bool _success){
-        for(uint i = 0; i < _answers.length; i++){
-            questionsAnswers[_idCourse][_indexQuestion].answers[i].text = _answers[i];
-            questionsAnswers[_idCourse][_indexQuestion].answers[i].flag = _flags[i];
-        }
-        questionsAnswers[_idCourse].length = _answers.length;
-        return true;
-    }
-
-    function addQuestionToCourse(uint _idCourse, string memory _question) public returns(bool _success){
-        questionsAnswers[_idCourse].push(QuestionAnswer({question: _question, length: 0}));
-        return true;
-    }
 
     function newCourse (string memory _title, string memory _resume, string memory _urlPdf, string memory _urlImage) public returns (bool _success){
         courses[nbrCourses].idCourse = nbrCourses;
@@ -55,12 +38,23 @@ contract Courses {
         courses[nbrCourses].urlImage = _urlImage;
         courses[nbrCourses].timestamp = block.timestamp;
         nbrCourses++;
-        countQuestionsAnswers[nbrCourses] = 0;
         return true;
     }
 
     function ifCoursesIsEmpty() public view returns (bool _success) {
         if(nbrCourses > 0) return false;
+        return true;
+    }
+
+    function addQuestionWithAnswersToCourse(uint _idCourse, string memory _question, string[] memory _answers, bool[] memory _flags)
+    public
+    returns(bool _success){
+        questions[_idCourse].push(_question);
+        uint indexQuestion = questions[_idCourse].length - 1;
+        for(uint i = 0; i < _answers.length; i++){
+            Answer memory answer = Answer({text: _answers[i], flag: _flags[i]});
+            answers[_idCourse][indexQuestion].push(answer);
+        }
         return true;
     }
 
@@ -73,31 +67,18 @@ contract Courses {
         return arrCourses;
     }
 
-    function getAnswersOfQuestion(uint _idCourse, uint _indexQuestion) public view returns(string[] memory){
-        string[] memory answers;
-        for(uint i; i < questionsAnswers[_idCourse][_indexQuestion].length; i++){
-            answers.push(questionsAnswers[_idCourse][_indexQuestion].answers[i]);
-        }
-        return answers;
+    function ifThereIsQuestion(uint _idCourse) public view returns(bool){
+        if(questions[_idCourse].length > 0) return true;
+        return false;
     }
 
     function getQuestionsOfCourse(uint _idCourse) public view returns(string[] memory){
-        string[] memory questions;
-        for(uint i = 0; i < questionsAnswers[_idCourse].length; i++){
-            questions.push(questionsAnswers[_idCourse][i].question);
-        }
-        return questions;
+        return questions[_idCourse];
     }
 
-//    function getCourseById(uint _idCourse) public view returns (Course memory, QuestionAnswer[] memory){
-//        uint _countQA = countQuestionsAnswers[_idCourse];
-//        QuestionAnswer[] memory arrQuestionsAnswers = new QuestionAnswer[](_countQA);
-//        for(uint8 i = 0; i < _countQA; i++){
-//            QuestionAnswer storage questionAnswer = questionsAnswers[_idCourse][i];
-//            arrQuestionsAnswers[i] = questionAnswer;
-//        }
-//        return (courses[_idCourse], arrQuestionsAnswers);
-//    }
+    function getAnswersOfQuestion(uint _idCourse, uint _indexQuestion) public view returns(Answer[] memory){
+        return answers[_idCourse][_indexQuestion];
+    }
 
     function addAddressCertifiedStudent(uint _idCourse, address _adrStudent) public returns(bool _success){
         certifiedStudents[_idCourse].push(_adrStudent);

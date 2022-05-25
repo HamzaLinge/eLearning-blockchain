@@ -5,16 +5,11 @@ import {ethers} from 'ethers'
 
 const initialState = {
     addressAccount : "",
-    user: {
-        addressAccount: "",
-        firstName : "",
-        familyName: "",
-        typeUser: ""
-    },
+    user: {},
     loading: false,
     error: {
         flag: false,
-        message: ""
+        message: "",
     }
 }
 

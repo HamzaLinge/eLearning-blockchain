@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import "./CardCourse.css"
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import IconButton from "@mui/material/IconButton";
@@ -6,17 +6,57 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CodeIcon from '@mui/icons-material/Code';
 import {DEV_MODE, URL_STUDENT_COURSES_COURSE} from "../../../../config";
 import {useNavigate} from "react-router-dom";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
 import {useDispatch} from "react-redux";
-import {fetchCourseById} from "../../homeStudentSlice";
+import {uploadQuestionAnswersOfCourse} from "../../../setCourse/setCourseSlice";
 
 function CardCourse({_idCourse, _title, _resume, _urlPdf, _urlImage, _timestamp}) {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
+    const [open, setOpen] = useState(false)
+
     const goToCourse = () => {
-        dispatch(fetchCourseById(_idCourse))
-        navigate(URL_STUDENT_COURSES_COURSE)
+        navigate(URL_STUDENT_COURSES_COURSE, {
+            state: {
+                _idCourse,
+                _title,
+                _resume,
+                _urlPdf,
+                _urlImage,
+                _timestamp
+            }
+        })
+    }
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    }
+
+    const submitQuestionAnswers = () => {
+        const _question = document.querySelector(".addQCM__question").value
+        const _answers = []
+        const _flags = []
+        document.querySelectorAll(".addQCM__answer").forEach(answer => {
+            const text = answer.querySelector(".addQCM__answer__text").value
+            if(text.length !== 0){
+                _answers.push(text)
+                const flag = answer.querySelector(".addQCM__answer__flag").value
+                if(flag === "true") _flags.push(true)
+                else _flags.push(false)
+            }
+        })
+        dispatch(uploadQuestionAnswersOfCourse({_idCourse, _question, _answers, _flags}))
     }
 
     return (
@@ -46,6 +86,7 @@ function CardCourse({_idCourse, _title, _resume, _urlPdf, _urlImage, _timestamp}
                                     variant="contained"
                                     color={"success"}
                                     size={"small"}
+                                    onClick={() => setOpen(true)}
                         >
                             <CodeIcon fontSize="inherit" />
                         </IconButton>
@@ -61,6 +102,55 @@ function CardCourse({_idCourse, _title, _resume, _urlPdf, _urlImage, _timestamp}
                     <MoreHorizIcon fontSize="inherit" />
                 </IconButton>
             </div>
+            <Modal
+                open={open}
+                onClose={() => setOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <p className="addQCM__title">Add Question and Answers</p>
+                    <input placeholder={"question"} type="text" className="addQCM__question"/>
+                    <div className="addQCM__answer">
+                        <input placeholder={"answer"} type="text" className="addQCM__answer__text"/>
+                        <select className="addQCM__answer__flag">
+                            <option value={false} className="addQCM__answer__flag__option">False</option>
+                            <option value={true} className="addQCM__answer__flag__option">True</option>
+                        </select>
+                    </div>
+                    <div className="addQCM__answer">
+                        <input placeholder={"answer"} type="text" className="addQCM__answer__text"/>
+                        <select className="addQCM__answer__flag">
+                            <option value={false} className="addQCM__answer__flag__option">False</option>
+                            <option value={true} className="addQCM__answer__flag__option">True</option>
+                        </select>
+                    </div>
+                    <div className="addQCM__answer">
+                        <input placeholder={"answer"} type="text" className="addQCM__answer__text"/>
+                        <select className="addQCM__answer__flag">
+                            <option value={false} className="addQCM__answer__flag__option">False</option>
+                            <option value={true} className="addQCM__answer__flag__option">True</option>
+                        </select>
+                    </div>
+                    <div className="addQCM__answer">
+                        <input placeholder={"answer"} type="text" className="addQCM__answer__text"/>
+                        <select className="addQCM__answer__flag">
+                            <option value={false} className="addQCM__answer__flag__option">False</option>
+                            <option value={true} className="addQCM__answer__flag__option">True</option>
+                        </select>
+                    </div>
+                    <div className="addQCM__answer">
+                        <input placeholder={"answer"} type="text" className="addQCM__answer__text"/>
+                        <select className="addQCM__answer__flag">
+                            <option value={false} className="addQCM__answer__flag__option">False</option>
+                            <option value={true} className="addQCM__answer__flag__option">True</option>
+                        </select>
+                    </div>
+                    <button className="addQCM__submit"
+                            onClick={submitQuestionAnswers}
+                    >Submit</button>
+                </Box>
+            </Modal>
         </div>
     );
 }

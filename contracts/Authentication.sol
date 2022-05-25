@@ -3,9 +3,7 @@ pragma solidity 0.8.13;
 contract Authentication {
 
     struct QuestionAnswer {
-        uint idCourse;
-        uint idQuestionAnswer;
-        bool answerFlag;
+        uint idQuestion;
         uint idAnswer;
     }
 
@@ -17,8 +15,9 @@ contract Authentication {
         string typeUser;
     }
 
-    mapping(address => User) private users;
-    mapping(address => QuestionAnswer[]) private questionsAnswers;
+    mapping (address => User) private users;
+    mapping (address => uint[]) private keysCourses;
+    mapping (address => mapping (uint => QuestionAnswer[])) private questionsAnswers;
 
     constructor () {
 
@@ -55,23 +54,27 @@ contract Authentication {
 
     //    Courses ---------------------------------------------------------
 
-    function getCoursesOfStudent(address _idStudent) public view returns(QuestionAnswer[] memory){
-        return questionsAnswers[_idStudent];
+    function ifCourseExistsForStudent(uint _idCourse) public view returns(bool){
+        for(uint i = 0; i < keysCourses[msg.sender].length; i++){
+            if(keysCourses[msg.sender][i] == _idCourse) return true;
+        }
+        return false;
     }
 
-    function newCourseForStudent(address _adrStudent, uint _idCourse, uint _idAnswerQuestion, bool _answerFlag, uint _idAnswer) public returns (bool) {
-        QuestionAnswer memory questionAnswer;
-        questionAnswer.idQuestionAnswer = _idAnswerQuestion;
-        questionAnswer.answerFlag = _answerFlag;
-        questionAnswer.idAnswer = _idAnswer;
-        questionAnswer.idCourse = _idCourse;
-        questionsAnswers[_adrStudent].push(questionAnswer);
+    function addNewCourseToStudent(uint _idCourse, uint[] memory _idQuestions, uint[] memory _idAnswers) public returns(bool _success){
+        keysCourses[msg.sender].push(_idCourse);
+        for(uint i = 0; i < _idQuestions.length; i++){
+            QuestionAnswer memory questionAnswer = QuestionAnswer({idQuestion: _idQuestions[i], idAnswer: _idAnswers[i]});
+            questionsAnswers[msg.sender][_idCourse].push(questionAnswer);
+        }
         return true;
     }
 
-    function addQuestionAnswerOfCourseForStudent(address _adrStudent, uint _idCourse, uint _answerQuestion, bool _answerFlag, uint _idAnswer) public returns (bool) {
-        QuestionAnswer memory questionAnswer = QuestionAnswer(_idCourse, _answerQuestion, _answerFlag, _idAnswer);
-        questionsAnswers[_adrStudent].push(questionAnswer);
-        return true;
+    function getQuestionsAnswersOfCourseForStudent(uint _idCourse) public view returns(QuestionAnswer[] memory){
+        return questionsAnswers[msg.sender][_idCourse];
+    }
+
+    function getIdCoursesOfStudent() public view returns(uint[] memory){
+        return keysCourses[msg.sender];
     }
 }

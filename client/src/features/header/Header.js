@@ -19,7 +19,6 @@ function Header() {
     const dispatch = useDispatch()
 
     const user = useSelector(selectUser)
-    const addressAccount = useSelector(selectAddressAccount)
 
     const refCourses = useRef()
     const refProfile = useRef()
@@ -30,15 +29,16 @@ function Header() {
     }, [])
 
     useEffect(() => {
+        console.log("User changed !")
         if(!user.typeUser) navigate("/")
         else{
             if(user.typeUser === TYPE_EMPLOYEE) navigate(URL_EMPLOYER)
             else {
-                navigate(URL_STUDENT_COURSES)
+                // navigate(URL_STUDENT_COURSES)
                 goToCourses()
             }
         }
-    }, [user.typeUser])
+    }, [user])
 
     const goToCourses = () => {
         refProfile.current.classList.remove("header__nav__option__selected")
