@@ -19,6 +19,10 @@ const initialState = {
     qcmPassed: false,
     qcmContinue: false,
     loadingCheckQcmForStudent: false,
+    savedQcmFlag: false,
+
+    allMyCourses: [],
+    loadAllMyCourses: false,
 }
 
 async function initialProviderAuthentication () {
@@ -60,6 +64,7 @@ export const fetchQcmOfCourse = createAsyncThunk(
                 // Get questions from course contract
                 const _questions = await contractCourses.getQuestionsOfCourse(_idCourse);
                 if(_questions.length === 0) return {errorFlag: true, content: `There is no questions for course ${_idCourse}`};
+                // console.log(_questions.length)
                 // Check if course exists for the student
                 const courseExists = await contractAuthentication.ifCourseExistsForStudent(_idCourse);
                 // My QCM
@@ -70,7 +75,8 @@ export const fetchQcmOfCourse = createAsyncThunk(
                     _indexBegin = 0;
                 } else {
                     const _questionsAnswersOfStudent = await contractAuthentication.getQuestionsAnswersOfCourseForStudent(_idCourse);
-                    _indexBegin = _questionsAnswersOfStudent.length - 1;
+                    // console.log(_questionsAnswersOfStudent.length)
+                    _indexBegin = _questionsAnswersOfStudent.length;
                 }
                 // Fill the My QCM and don't forget to save the indexQuestion for each question
                 for(let _indexQuestion = _indexBegin; _indexQuestion < _questions.length; _indexQuestion++){
@@ -103,6 +109,7 @@ export const saveAnswersToStudent = createAsyncThunk(
     }
 )
 
+
 export const checkIfQcmOfCoursePassed = createAsyncThunk(
     'checkIfQcmOfCoursePassed',
     async (_idCourse) => {
@@ -114,7 +121,7 @@ export const checkIfQcmOfCoursePassed = createAsyncThunk(
                 const _courseExists = await contractAuthentication.ifCourseExistsForStudent(_idCourse);
                 if(_courseExists){
                     const _questionsAnswersOfStudent = await contractAuthentication.getQuestionsAnswersOfCourseForStudent(_idCourse);
-                    if(_questions.length === _questionsAnswersOfStudent) return {errorFlag: false, content: {pass: true, continue: false}};
+                    if(_questions.length === _questionsAnswersOfStudent.length) return {errorFlag: false, content: {pass: true, continue: false}};
                     else return {errorFlag: false, content: {pass: false, continue: true}};
                 }
                 return {errorFlag: false, content: {pass: false, continue: false}};
@@ -126,31 +133,71 @@ export const checkIfQcmOfCoursePassed = createAsyncThunk(
     }
 )
 
+export const getAllMyCourses = createAsyncThunk(
+    'getAllMyCourses',
+    async () => {
+        if(window.ethereum !== 'undefined'){
+            const contractAuthentication = await initialProviderAuthentication();
+            const contractCourses = await initialProviderCourses();
+            try{
+                const _idCourses = await contractAuthentication.getIdCoursesOfStudent();
+                if(_idCourses.length === 0) return {errorFlag: false, content: []};
+                let _allMyCourses = [];
+                for(let _indexCourse = 0; _indexCourse < _idCourses.length; _indexCourse++){
+                    const _course = await contractCourses.getCourseById(_idCourses[_indexCourse]);
+                    const _questions  = await contractCourses.getQuestionsOfCourse(_idCourses[_indexCourse]);
+                    const _questionsAnswersStudent = await contractAuthentication.getQuestionsAnswersOfCourseForStudent(_idCourses[_indexCourse]);
+                    let _totalRightAnswer = 0;
+                    for(let _indexAnswer = 0; _indexAnswer < _questionsAnswersStudent.length; _indexAnswer++){
+                        const _answers = await contractCourses.getAnswersOfQuestion(_idCourses[_indexCourse], _questionsAnswersStudent[_indexAnswer].idQuestion);
+                        if(_answers[_questionsAnswersStudent[_indexAnswer].idAnswer].flag) _totalRightAnswer++;
+                    }
+                    _allMyCourses.push({
+                        idCourse: _course.idCourse,
+                        title: _course.title,
+                        resume: _course.resume,
+                        urlPdf: _course.urlPdf,
+                        urlImage: _course.urlImage,
+                        timestamp: _course.timestamp,
+                        progress: _totalRightAnswer * 100 / _questions.length,
+                    })
+                }
+                console.log(_allMyCourses);
+                return {errorFlag: false, content: _allMyCourses};
+            } catch (e) {
+                console.log('Error check if QCM is passed : ', e);
+                return {errorFlag: true, content: "Blockchain : Error check if QCM is passed !"}
+            }
+        }
+    }
+)
+
 export const homeStudentSlice = createSlice({
     name: 'homeStudent',
     initialState,
-    reducers: {},
+    reducers: {
+    },
     extraReducers: {
         // Fetch Courses ------------------------------------------------------------------------------------------
         [fetchCourses.pending] : state => {
-            state.courses = []
-            state.errorFetchCourses = ""
-            state.loadingCourses = true
+            state.courses = [];
+            state.errorFetchCourses = "";
+            state.loadingCourses = true;
         },
         [fetchCourses.fulfilled] : (state, action) => {
-            if(action.payload.errorFlag) state.errorFetchCourses = action.payload.content
-            else state.courses = action.payload.content
-            state.loadingCourses = false
+            if(action.payload.errorFlag) state.errorFetchCourses = action.payload.content;
+            else state.courses = action.payload.content;
+            state.loadingCourses = false;
         },
         [fetchCourses.rejected] : (state, action) => {
-            state.errorFetchCourses = action.payload.content
-            state.loadingCourses = false
+            state.errorFetchCourses = action.payload.content;
+            state.loadingCourses = false;
         },
         // Fetch QCM -----------------------------------------------------------------------------------------------
         [fetchQcmOfCourse.pending] : state => {
-            state.loadingQcm = true
-            state.errorFetchQcm = ""
-            state.qcm = []
+            state.loadingQcm = true;
+            state.errorFetchQcm = "";
+            state.qcm = [];
         },
         [fetchQcmOfCourse.fulfilled] : (state, action) => {
             if(action.payload.errorFlag) state.errorFetchQcm = action.payload.content;
@@ -160,21 +207,24 @@ export const homeStudentSlice = createSlice({
             state.loadingQcm = false;
         },
         [fetchQcmOfCourse.rejected] : (state, action) => {
-            state.errorFetchQcm = action.payload
-            state.loadingQcm = false
+            state.errorFetchQcm = action.payload;
+            state.loadingQcm = false;
         },
         // Save Answers ------------------------------------------------------------------------------------------
         [saveAnswersToStudent.pending] : state => {
             state.errorSaveAnswers = "";
             state.savingAnswers = true;
+            state.savedQcmFlag = false;
         },
         [saveAnswersToStudent.fulfilled] : (state, action) => {
             if(action.payload.errorFlag) state.errorSaveAnswers = action.payload.content;
+            else state.savedQcmFlag = true;
             state.savingAnswers = false;
         },
         [saveAnswersToStudent.rejected] : (state, action) => {
             state.errorSaveAnswers = action.payload.content;
             state.savingAnswers = false;
+            state.savedQcmFlag = false;
         },
         // Check if QCM is passed or if we have to continue ------------------------------------------------------
         [checkIfQcmOfCoursePassed.pending]: state => {
@@ -189,6 +239,21 @@ export const homeStudentSlice = createSlice({
         },
         [checkIfQcmOfCoursePassed.rejected]: (state, action) => {
             state.loadingCheckQcmForStudent = false;
+        },
+        // All My Courses -----------------------------------------------------------------------------------
+        [getAllMyCourses.pending] : state => {
+            state.loadAllMyCourses = true;
+            state.allMyCourses = [];
+        },
+        [getAllMyCourses.fulfilled] : (state, action) => {
+            console.log(action.payload)
+            if(!action.payload.errorFlag){
+                state.allMyCourses = action.payload.content;
+            }
+            state.loadAllMyCourses = false;
+        },
+        [getAllMyCourses.rejected] : (state, action) => {
+            state.loadAllMyCourses = false;
         },
     },
 });
@@ -209,6 +274,10 @@ export const selectErrorSaveAnswers = state => state.homeStudent.errorSaveAnswer
 export const selectQcmPassed = state => state.homeStudent.qcmPassed;
 export const selectQcmContinue = state => state.homeStudent.qcmContinue;
 export const selectLoadingCheckQcmForStudent = state => state.homeStudent.loadingCheckQcmForStudent;
+export const selectSavedQcmFlag = state => state.homeStudent.savedQcmFlag;
+
+export const selectAllMyCourses = state => state.homeStudent.allMyCourses;
+export const selectLoadAllMyCourses = state => state.homeStudent.loadAllMyCourses;
 
 
 export default homeStudentSlice.reducer;

@@ -19,7 +19,7 @@ function CardCourse({_idCourse, _title, _resume, _urlPdf, _urlImage, _timestamp}
     const [open, setOpen] = useState(false)
 
     const goToCourse = () => {
-        navigate(URL_STUDENT_COURSES_COURSE, {
+        navigate(URL_STUDENT_COURSES_COURSE + "/" + _idCourse, {
             state: {
                 _idCourse,
                 _title,
@@ -76,7 +76,9 @@ function CardCourse({_idCourse, _title, _resume, _urlPdf, _urlImage, _timestamp}
                             variant="contained"
                             color={"success"}
                             size={"small"}
-                            href={`https://ipfs.io/ipfs/${_urlPdf}`}
+                            onClick={() => {
+                                window.open(`https://ipfs.io/ipfs/${_urlPdf}`, "_blank")
+                            }}
                 >
                     <PictureAsPdfIcon fontSize="inherit" />
                 </IconButton>

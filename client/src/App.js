@@ -24,7 +24,7 @@ function App() {
                   <Route path={URL_STUDENT_COURSES} element={<Courses />} />
                   <Route path={URL_STUDENT_PROFILE} element={<Profile />} />
                   <Route path={URL_ADD_COURSE} element={<AddCourse />} />
-                  <Route path={URL_STUDENT_COURSES_COURSE} element={<Course />} />
+                  <Route path={URL_STUDENT_COURSES_COURSE + "/:idCourse"} element={<Course />} />
                   <Route path={URL_QCM} element={<Qcm />} />
               </Routes>
           </div>

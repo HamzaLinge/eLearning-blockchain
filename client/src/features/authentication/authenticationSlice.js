@@ -36,7 +36,8 @@ export const signUp__blockchain = createAsyncThunk(
                 const response = await contractAuthentication.areYouAlreadySignUp()
                 if(response) return {error: true, msg: "You're already signed up !"};
                 await contractAuthentication.signUp(signUpInputs.firstName, signUpInputs.familyName, signUpInputs.typeUser, signUpInputs.password)
-                return {error: false, response: await contractAuthentication.logIn(signUpInputs.password)}
+                // return {error: false, response: await contractAuthentication.logIn(signUpInputs.password)}
+                return {error: false, response: {firstName: signUpInputs.firstName, familyName: signUpInputs.familyName, typeUser: signUpInputs.typeUser}}
             } catch (e) {
                 console.log('Error sign up to the blockchain : ', e);
                 // console.log("wesh")
@@ -79,13 +80,13 @@ export const authenticationSlice = createSlice({
         },
         resetError : state => {
             state.error.flag = false
-            state.error.message = ""
+            state.error.message = "";
         }
     },
     extraReducers: {
         // Get Address
         [getAddressAccount.fulfilled] : (state, action) => {
-            state.addressAccount = action.payload
+            state.addressAccount = action.payload;
         },
         // Sign Up
         [signUp__blockchain.pending] : state => {
@@ -95,13 +96,13 @@ export const authenticationSlice = createSlice({
         [signUp__blockchain.fulfilled] : (state, action) => {
             // console.log("wesh 2")
             if(action.payload.error){
-                state.error.flag = true
-                state.error.message = action.payload.msg
+                state.error.flag = true;
+                state.error.message = action.payload.msg;
             } else{
-                state.user.addressAccount = action.payload.response[0]
-                state.user.firstName = action.payload.response[1]
-                state.user.familyName = action.payload.response[2]
-                state.user.typeUser = action.payload.response[3]
+                // state.user.addressAccount = action.payload.response[0]
+                state.user.firstName = action.payload.firstName;
+                state.user.familyName = action.payload.familyName;
+                state.user.typeUser = action.payload.typeUser;
             }
             state.loading = false
         },
@@ -121,7 +122,7 @@ export const authenticationSlice = createSlice({
                 state.error.flag = true
                 state.error.message = action.payload.msg
             } else {
-                state.user.addressAccount = action.payload.response[0]
+                // state.user.addressAccount = action.payload.response[0]
                 state.user.firstName = action.payload.response[1]
                 state.user.familyName = action.payload.response[2]
                 state.user.typeUser = action.payload.response[3]

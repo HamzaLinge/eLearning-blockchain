@@ -14,6 +14,7 @@ import {
     selectQcmPassed
 } from "../homeStudentSlice";
 import LoadingButton from "@mui/lab/LoadingButton";
+import CircularProgress from "@mui/material/CircularProgress";
 
 
 function Course() {
@@ -22,13 +23,15 @@ function Course() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const qcmPassed = useSelector(selectQcmPassed)
-    const qcmContinue = useSelector(selectQcmContinue)
-    const loadingCheckQcmForStudent = useSelector(selectLoadingCheckQcmForStudent)
+    const qcmPassed = useSelector(selectQcmPassed);
+    const qcmContinue = useSelector(selectQcmContinue);
+    const loadingCheckQcmForStudent = useSelector(selectLoadingCheckQcmForStudent);
 
-    const [course, setCourse] = useState({})
+    const [course, setCourse] = useState({});
+    const [loadCourse, setLoadCourse] = useState(true);
 
     useEffect(() => {
+        setLoadCourse(true);
         setCourse({
             idCourse: location.state._idCourse,
             title: location.state._title,
@@ -36,59 +39,67 @@ function Course() {
             urlPdf: location.state._urlPdf,
             urlImage: location.state._urlImage,
             timestamp: location.state._timestamp
-        })
-        dispatch(checkIfQcmOfCoursePassed(location.state._idCourse))
+        });
+        dispatch(checkIfQcmOfCoursePassed(location.state._idCourse));
+        setLoadCourse(false);
     }, [])
 
     return (
         <div className="course">
             {
-                course.length === 0 ?
-                    <Alert severity="warning">No Course selected !</Alert>
+                loadCourse ?
+                    <div className="course__loading">
+                        <CircularProgress />
+                    </div>
                     :
-                    <>
-                        <img src={`https://ipfs.io/ipfs/${course.urlImage}`} alt="" className={"course__img"}/>
-                        <p className="course__title">{course.title}</p>
-                        <p className="course__resume">{course.resume}</p>
-                        <div className="course__links">
-                            <Button variant="contained"
-                                    endIcon={<PictureAsPdfIcon />}
-                                    className={"course__links__link"}
-                                    href={`https://ipfs.io/ipfs/${course.urlPdf}`}
-                            >
-                                Download PDF
-                            </Button>
-                            {
-                                !qcmPassed ?
-                                    <LoadingButton
-                                        variant="contained"
-                                        loading={loadingCheckQcmForStudent}
-                                        endIcon={<QuestionAnswerIcon />}
+                    course.length === 0 ?
+                        <Alert severity="warning">No Course selected !</Alert>
+                        :
+                        <>
+                            <img src={`https://ipfs.io/ipfs/${course.urlImage}`} alt="" className={"course__img"}/>
+                            <p className="course__title">{course.title}</p>
+                            <p className="course__resume">{course.resume}</p>
+                            <div className="course__links">
+                                <Button variant="contained"
+                                        endIcon={<PictureAsPdfIcon />}
                                         className={"course__links__link"}
-                                        color={"success"}
-                                        onClick={() =>
-                                            navigate(URL_QCM, {
-                                                state: {
-                                                    _idCourse: course.idCourse,
-                                                    _title: course.title
-                                                }
-                                            })
-                                        }
-                                    >
-                                        {
-                                            qcmContinue ?
-                                                "Continue "
-                                                :
-                                                "Pass "
-                                        }
-                                        the QCM
-                                    </LoadingButton>
-                                    :
-                                    "This QCM is already passed !"
-                            }
+                                        onClick={() => {
+                                            window.open(`https://ipfs.io/ipfs/${course.urlPdf}`, "_blank")
+                                        }}
+                                >
+                                    Download PDF
+                                </Button>
+                                {
+                                    !qcmPassed ?
+                                        <LoadingButton
+                                            variant="contained"
+                                            loading={loadingCheckQcmForStudent}
+                                            endIcon={<QuestionAnswerIcon />}
+                                            className={"course__links__link"}
+                                            color={"success"}
+                                            onClick={() =>
+                                                navigate(URL_QCM, {
+                                                    state: {
+                                                        _idCourse: course.idCourse,
+                                                        _title: course.title
+                                                    }
+                                                })
+                                            }
+                                        >
+                                            {
+                                                qcmContinue ?
+                                                    "Continue "
+                                                    :
+                                                    "Pass "
+                                            }
+                                            the QCM
+                                        </LoadingButton>
+                                        :
+                                        <Alert severity="info">You have already taken this MCQ !</Alert>
+                                }
 
-                        </div>
-                    </>
+                            </div>
+                        </>
             }
         </div>
     );

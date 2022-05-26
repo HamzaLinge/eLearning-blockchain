@@ -5,6 +5,7 @@ import {getAddressAccount, handleLogOut, selectAddressAccount, selectUser} from 
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import {
+    DEV_MODE,
     TYPE_EMPLOYEE,
     TYPE_STUDENT,
     URL_ADD_COURSE,
@@ -30,34 +31,31 @@ function Header() {
 
     useEffect(() => {
         console.log("User changed !")
-        if(!user.typeUser) navigate("/")
+        if(!user.typeUser) navigate("/");
         else{
-            if(user.typeUser === TYPE_EMPLOYEE) navigate(URL_EMPLOYER)
-            else {
-                // navigate(URL_STUDENT_COURSES)
-                goToCourses()
-            }
+            if(user.typeUser === TYPE_EMPLOYEE) navigate(URL_EMPLOYER);
+            else goToCourses();
         }
     }, [user])
 
     const goToCourses = () => {
-        refProfile.current.classList.remove("header__nav__option__selected")
-        refAddCourse.current.classList.remove("header__nav__option__selected")
-        refCourses.current.classList.add("header__nav__option__selected")
-        navigate(URL_STUDENT_COURSES)
+        refProfile.current.classList.remove("header__nav__option__selected");
+        if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
+        refCourses.current.classList.add("header__nav__option__selected");
+        navigate(URL_STUDENT_COURSES);
     }
 
     const goToProfile = () => {
-        refCourses.current.classList.remove("header__nav__option__selected")
-        refAddCourse.current.classList.remove("header__nav__option__selected")
-        refProfile.current.classList.add("header__nav__option__selected")
-        navigate(URL_STUDENT_PROFILE)
+        refCourses.current.classList.remove("header__nav__option__selected");
+        if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
+        refProfile.current.classList.add("header__nav__option__selected");
+        navigate(URL_STUDENT_PROFILE);
     }
     const goToAddCourse = () => {
-        refProfile.current.classList.remove("header__nav__option__selected")
-        refCourses.current.classList.remove("header__nav__option__selected")
-        refAddCourse.current.classList.add("header__nav__option__selected")
-        navigate(URL_ADD_COURSE)
+        refProfile.current.classList.remove("header__nav__option__selected");
+        refCourses.current.classList.remove("header__nav__option__selected");
+        if(DEV_MODE) refAddCourse.current.classList.add("header__nav__option__selected");
+        navigate(URL_ADD_COURSE);
     }
 
     return (
@@ -71,7 +69,13 @@ function Header() {
                                 <>
                                     <p ref={refCourses} className="header__nav__option" onClick={goToCourses}>Courses</p>
                                     <p ref={refProfile} className="header__nav__option" onClick={goToProfile}>Profile</p>
-                                    <p ref={refAddCourse} className={"header__nav__option"} onClick={goToAddCourse}>Add Course</p>
+                                    {
+                                        DEV_MODE ?
+                                            <p ref={refAddCourse} className={"header__nav__option"} onClick={goToAddCourse}>Add Course</p>
+                                            :
+                                            ""
+                                    }
+
                                 </>
                                 :
                                 user.typeUser === TYPE_EMPLOYEE ?
@@ -87,11 +91,11 @@ function Header() {
 
             <div className="header__user">
                 {
-                    user.addressAccount ?
+                    user.length !== 0 ?
                         <>
                             <div className="header__user__information">
                                 <p className="header__user__information__firstName">{user.firstName}</p>
-                                <p className="header__user__information__familyName">{user.familyName.toUpperCase()}</p>
+                                <p className="header__user__information__familyName">{String(user.familyName).toUpperCase()}</p>
                             </div>
                             <Button  className={"header__user__btnLogOut"} onClick={() => dispatch(handleLogOut())}>Log Out</Button>
                         </>

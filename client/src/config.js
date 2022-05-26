@@ -1,5 +1,5 @@
-export const AuthenticationContractAddress = "0x9A21052C110884AEaB8e3B688AEe77060d2BC173"
-export const CoursesContractAddress = "0xf644550a5350bDd0c91FB16585C079AAAbc28ae0"
+export const AuthenticationContractAddress = "0x2853e47919f0BeF46257c8964A47F09e41DbF58D"
+export const CoursesContractAddress = "0x7942762C0246D140baf0e53bb85299cff9430FD3"
 
 export const TYPE_EMPLOYEE = "employee"
 export const TYPE_STUDENT = "student"

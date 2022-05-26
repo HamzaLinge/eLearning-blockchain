@@ -7,7 +7,7 @@ import {
     saveAnswersToStudent,
     selectErrorFetchQcm, selectErrorSaveAnswers,
     selectLoadingQcm,
-    selectQcm, selectSavingAnswers
+    selectQcm, selectSavedQcmFlag, selectSavingAnswers
 } from "../homeStudentSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
@@ -18,51 +18,55 @@ import Button from "@mui/material/Button";
 
 function Qcm() {
 
-    const location = useLocation()
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const qcm = useSelector(selectQcm)
-    const loadingQcm = useSelector(selectLoadingQcm)
-    const errorFetchQcm = useSelector(selectErrorFetchQcm)
+    const qcm = useSelector(selectQcm);
+    const loadingQcm = useSelector(selectLoadingQcm);
+    const errorFetchQcm = useSelector(selectErrorFetchQcm);
 
-    const savingAnswers = useSelector(selectSavingAnswers)
-    const errorSaveAnswers = useSelector(selectErrorSaveAnswers)
+    const savingAnswers = useSelector(selectSavingAnswers);
+    const errorSaveAnswers = useSelector(selectErrorSaveAnswers);
 
-    const [indexQuestion, setIndexQuestion] = useState(0)
-    const [indexAnswer, setIndexAnswer] = useState(null)
-    const [idQuestions, setIdQuestions] = useState([])
-    const [idAnswers, setIdAnswers] = useState([])
+    const savedQcmFlag = useSelector(selectSavedQcmFlag)
+
+    const [indexQuestion, setIndexQuestion] = useState(0);
+    const [indexAnswer, setIndexAnswer] = useState(null);
+    const [idQuestions, setIdQuestions] = useState([]);
+    const [idAnswers, setIdAnswers] = useState([]);
 
     useEffect(() => {
         dispatch(fetchQcmOfCourse(location.state._idCourse))
     }, [])
 
-    useEffect(() => {
-        if(qcm.length !== 0){
-            setIndexQuestion(qcm[0].indexQuestion)
-        }
-    }, [qcm.length])
-
     const nextQuestion = () => {
-        setIdQuestions([...idQuestions, indexQuestion])
-        setIdAnswers([...idAnswers, indexAnswer])
+        setIdQuestions([...idQuestions, qcm[indexQuestion].indexQuestion])
+        setIdAnswers([...idAnswers, parseInt(indexAnswer)])
         setIndexQuestion(indexQuestion + 1)
         setIndexAnswer(null)
     }
 
     const saveAnswers = () => {
-        setIdQuestions([...idQuestions, indexQuestion])
-        setIdAnswers([...idAnswers, indexAnswer])
-        dispatch(saveAnswersToStudent({_idCourse: location.state._idCourse, _idQuestions: idQuestions, _idAnswers: idAnswers}))
+        setIdQuestions([...idQuestions, qcm[indexQuestion].indexQuestion])
+        setIdAnswers([...idAnswers, parseInt(indexAnswer)])
+        dispatch(saveAnswersToStudent({
+            _idCourse: location.state._idCourse,
+            _idQuestions: [...idQuestions, qcm[indexQuestion].indexQuestion],
+            _idAnswers: [...idAnswers, parseInt(indexAnswer)]
+        }))
     }
 
     const cancelQcm = () => {
         if(idQuestions.length === 0) navigate(-1)
-        else{
+        else {
             dispatch(saveAnswersToStudent({_idCourse: location.state._idCourse, _idQuestions: idQuestions, _idAnswers: idAnswers}))
         }
     }
+
+    useEffect(() => {
+        if(savedQcmFlag) navigate(-1)
+    }, [savedQcmFlag])
 
     return (
         <div className="qcm">
@@ -87,7 +91,7 @@ function Qcm() {
                                             :
                                             ""
                                     }
-                                    <p className="qcm__main__counter">{indexQuestion + 1} / {qcm.length}</p>
+                                    <p className="qcm__main__counter">{indexQuestion + 1}</p>
                                     <p className="qcm__main__question">{qcm[indexQuestion].question} ?</p>
                                     <RadioGroup
                                         className={"qcm__main__answers"}

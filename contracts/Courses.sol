@@ -20,10 +20,6 @@ contract Courses {
         bool flag;
     }
 
-    struct QuestionAnswer {
-        string question;
-    }
-
     uint private nbrCourses;
     mapping (uint => Course) private courses;
     mapping (uint => string[]) private questions;
@@ -65,6 +61,10 @@ contract Courses {
             arrCourses[i] = course;
         }
         return arrCourses;
+    }
+
+    function getCourseById(uint _idCourse) public view returns (Course memory){
+        return courses[_idCourse];
     }
 
     function ifThereIsQuestion(uint _idCourse) public view returns(bool){
