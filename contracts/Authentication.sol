@@ -62,7 +62,7 @@ contract Authentication {
     }
 
     function addNewCourseToStudent(uint _idCourse, uint[] memory _idQuestions, uint[] memory _idAnswers) public returns(bool _success){
-        keysCourses[msg.sender].push(_idCourse);
+        if(!ifCourseExistsForStudent(_idCourse)) keysCourses[msg.sender].push(_idCourse);
         for(uint i = 0; i < _idQuestions.length; i++){
             QuestionAnswer memory questionAnswer = QuestionAnswer({idQuestion: _idQuestions[i], idAnswer: _idAnswers[i]});
             questionsAnswers[msg.sender][_idCourse].push(questionAnswer);

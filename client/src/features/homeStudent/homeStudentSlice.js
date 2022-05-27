@@ -141,6 +141,7 @@ export const getAllMyCourses = createAsyncThunk(
             const contractCourses = await initialProviderCourses();
             try{
                 const _idCourses = await contractAuthentication.getIdCoursesOfStudent();
+                console.log(_idCourses.length);
                 if(_idCourses.length === 0) return {errorFlag: false, content: []};
                 let _allMyCourses = [];
                 for(let _indexCourse = 0; _indexCourse < _idCourses.length; _indexCourse++){
