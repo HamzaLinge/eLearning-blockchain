@@ -19,6 +19,7 @@ const initialState = {
     qcmPassed: false,
     qcmContinue: false,
     loadingCheckQcmForStudent: false,
+    resultQcm : 0,
     savedQcmFlag: false,
 
     allMyCourses: [],
@@ -64,7 +65,6 @@ export const fetchQcmOfCourse = createAsyncThunk(
                 // Get questions from course contract
                 const _questions = await contractCourses.getQuestionsOfCourse(_idCourse);
                 if(_questions.length === 0) return {errorFlag: true, content: `There is no questions for course ${_idCourse}`};
-                // console.log(_questions.length)
                 // Check if course exists for the student
                 const courseExists = await contractAuthentication.ifCourseExistsForStudent(_idCourse);
                 // My QCM
@@ -97,10 +97,18 @@ export const saveAnswersToStudent = createAsyncThunk(
     'saveAnswersToStudent',
     async ({_idCourse, _idQuestions, _idAnswers}) => {
         if(window.ethereum !== 'undefined'){
-            const contractAuthentication = await initialProviderAuthentication()
+            const contractAuthentication = await initialProviderAuthentication();
+            const contractCourses = await initialProviderCourses();
             try{
                 await contractAuthentication.addNewCourseToStudent(_idCourse, _idQuestions, _idAnswers);
-                return {errorFlag: false, content: ""};
+                const _questions = await contractCourses.getQuestionsOfCourse(_idCourse);
+                const _questionsAnswersStudent = await contractAuthentication.getQuestionsAnswersOfCourseForStudent(_idCourse);
+                let _totalRightAnswer = 0;
+                for(let _indexQuestion = 0; _indexQuestion < _questions.length; _indexQuestion++){
+                    const _answers = await contractCourses.getAnswersOfQuestion(_idCourse, _questionsAnswersStudent[_indexQuestion].idQuestion);
+                    if(_answers[_questionsAnswersStudent[_indexQuestion].idAnswer].flag) _totalRightAnswer++;
+                }
+                return {errorFlag: false, content: _totalRightAnswer * 100 / _questions.length};
             } catch (e) {
                 console.log('Error save answers : ', e);
                 return {errorFlag: true, content: "Blockchain : Error Error save answers !"}
@@ -141,7 +149,6 @@ export const getAllMyCourses = createAsyncThunk(
             const contractCourses = await initialProviderCourses();
             try{
                 const _idCourses = await contractAuthentication.getIdCoursesOfStudent();
-                console.log(_idCourses.length);
                 if(_idCourses.length === 0) return {errorFlag: false, content: []};
                 let _allMyCourses = [];
                 for(let _indexCourse = 0; _indexCourse < _idCourses.length; _indexCourse++){
@@ -215,11 +222,15 @@ export const homeStudentSlice = createSlice({
         [saveAnswersToStudent.pending] : state => {
             state.errorSaveAnswers = "";
             state.savingAnswers = true;
+            state.resultQcm = 0;
             state.savedQcmFlag = false;
         },
         [saveAnswersToStudent.fulfilled] : (state, action) => {
             if(action.payload.errorFlag) state.errorSaveAnswers = action.payload.content;
-            else state.savedQcmFlag = true;
+            else {
+                state.resultQcm = action.payload.content;
+                state.savedQcmFlag = true;
+            }
             state.savingAnswers = false;
         },
         [saveAnswersToStudent.rejected] : (state, action) => {
@@ -275,6 +286,7 @@ export const selectErrorSaveAnswers = state => state.homeStudent.errorSaveAnswer
 export const selectQcmPassed = state => state.homeStudent.qcmPassed;
 export const selectQcmContinue = state => state.homeStudent.qcmContinue;
 export const selectLoadingCheckQcmForStudent = state => state.homeStudent.loadingCheckQcmForStudent;
+export const selectResultQcm = state => state.homeStudent.resultQcm;
 export const selectSavedQcmFlag = state => state.homeStudent.savedQcmFlag;
 
 export const selectAllMyCourses = state => state.homeStudent.allMyCourses;

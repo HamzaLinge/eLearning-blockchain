@@ -5,7 +5,8 @@ import {create} from 'ipfs-http-client'
 import Courses from "../../contracts/Courses.json";
 
 const initialState = {
-    loadingUploadCourse: false
+    loadingUploadCourse: false,
+    loadingUploadQCM: false,
 }
 
 async function initialProviderCourses () {
@@ -73,19 +74,23 @@ export const setCoursesSlice = createSlice({
         },
         // Upload Question Answers
         [uploadQuestionAnswersOfCourse.pending] : state => {
-            console.log("Upload Question Answers : Pending")
+            console.log("Upload Question Answers : Pending");
+            state.loadingUploadQCM = true;
         },
         [uploadQuestionAnswersOfCourse.fulfilled] : (state, action) => {
-            console.log("Upload Question Answers : Fulfilled")
+            console.log("Upload Question Answers : Fulfilled");
+            state.loadingUploadQCM = false;
         },
         [uploadQuestionAnswersOfCourse.rejected] : (state, action) => {
-            console.log("Upload Question Answers : Rejected")
+            console.log("Upload Question Answers : Rejected");
+            state.loadingUploadQCM = false;
         },
     },
 });
 
 // export const {} = setCoursesSlice.actions;
 
-export const selectLoadingUploadCourse = state => state.setCourse.loadingUploadCourse
+export const selectLoadingUploadCourse = state => state.setCourse.loadingUploadCourse;
+export const selectLoadingUploadQCM = state => state.setCourse.loadingUploadQCM;
 
 export default setCoursesSlice.reducer;

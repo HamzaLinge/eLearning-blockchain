@@ -10,6 +10,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import {useDispatch} from "react-redux";
 import {uploadQuestionAnswersOfCourse} from "../../../setCourse/setCourseSlice";
+import {qcm} from "../../../setCourse/datas/course_1/course_1_qcm";
 
 function CardCourse({_idCourse, _title, _resume, _urlPdf, _urlImage, _timestamp}) {
 
@@ -57,6 +58,16 @@ function CardCourse({_idCourse, _title, _resume, _urlPdf, _urlImage, _timestamp}
             }
         })
         dispatch(uploadQuestionAnswersOfCourse({_idCourse, _question, _answers, _flags}))
+    }
+
+    const submitQCM = () => {
+        const _QCM = qcm;
+        _QCM.forEach((q) => {
+            const _question = q.question;
+            const _answers = q.answers;
+            const _flags = q.flags;
+            dispatch(uploadQuestionAnswersOfCourse({_idCourse, _question, _answers, _flags}));
+        })
     }
 
     return (
@@ -149,7 +160,7 @@ function CardCourse({_idCourse, _title, _resume, _urlPdf, _urlImage, _timestamp}
                         </select>
                     </div>
                     <button className="addQCM__submit"
-                            onClick={submitQuestionAnswers}
+                            onClick={submitQCM}
                     >Submit</button>
                 </Box>
             </Modal>

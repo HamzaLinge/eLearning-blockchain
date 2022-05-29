@@ -6,6 +6,7 @@ import {ethers} from 'ethers'
 const initialState = {
     addressAccount : "",
     user: {},
+    connected: false,
     loading: false,
     error: {
         flag: false,
@@ -23,7 +24,7 @@ export const getAddressAccount = createAsyncThunk(
     'getAddressAccount',
     async (_) => {
         const account = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        return account[0]
+        return account[0];
     }
 )
 
@@ -71,15 +72,11 @@ export const authenticationSlice = createSlice({
     initialState,
     reducers: {
         handleLogOut : state => {
-            state.user = {
-                addressAccount: "",
-                firstName : "",
-                familyName: "",
-                typeUser: ""
-            }
+            state.user = {};
+            state.connected = false;
         },
         resetError : state => {
-            state.error.flag = false
+            state.error.flag = false;
             state.error.message = "";
         }
     },
@@ -90,19 +87,20 @@ export const authenticationSlice = createSlice({
         },
         // Sign Up
         [signUp__blockchain.pending] : state => {
-            state.loading = true
-            state.error.flag = false
+            state.loading = true;
+            state.error.flag = false;
+            state.connected = false;
         },
         [signUp__blockchain.fulfilled] : (state, action) => {
-            // console.log("wesh 2")
             if(action.payload.error){
                 state.error.flag = true;
                 state.error.message = action.payload.msg;
             } else{
                 // state.user.addressAccount = action.payload.response[0]
-                state.user.firstName = action.payload.firstName;
-                state.user.familyName = action.payload.familyName;
-                state.user.typeUser = action.payload.typeUser;
+                state.user.firstName = action.payload.response.firstName;
+                state.user.familyName = action.payload.response.familyName;
+                state.user.typeUser = action.payload.response.typeUser;
+                state.connected = true;
             }
             state.loading = false
         },
@@ -114,34 +112,37 @@ export const authenticationSlice = createSlice({
         },
         // Log In
         [logIn__blockchain.pending] : state => {
-            state.loading = true
-            state.error.flag = false
+            state.loading = true;
+            state.error.flag = false;
+            state.connected = false;
         },
         [logIn__blockchain.fulfilled] : (state, action) => {
             if(action.payload.error){
                 state.error.flag = true
                 state.error.message = action.payload.msg
             } else {
-                // state.user.addressAccount = action.payload.response[0]
-                state.user.firstName = action.payload.response[1]
-                state.user.familyName = action.payload.response[2]
-                state.user.typeUser = action.payload.response[3]
+                // state.user.addressAccount = action.payload.response[0];
+                state.user.firstName = action.payload.response[1];
+                state.user.familyName = action.payload.response[2];
+                state.user.typeUser = action.payload.response[3];
+                state.connected = true;
             }
             state.loading = false
         },
         [logIn__blockchain.rejected] : (state) => {
-            state.error.flag = true
-            state.error.message = "Error log in from the blockchain !"
-            state.loading = false
+            state.error.flag = true;
+            state.error.message = "Error log in from the blockchain !";
+            state.loading = false;
         }
     },
 });
 
 export const {handleLogOut, resetError} = authenticationSlice.actions;
 
-export const selectAddressAccount = state => state.authentication.addressAccount
-export const selectUser = state => state.authentication.user
-export const selectLoading = state => state.authentication.loading
-export const selectError = state => state.authentication.error
+export const selectAddressAccount = state => state.authentication.addressAccount;
+export const selectUser = state => state.authentication.user;
+export const selectLoading = state => state.authentication.loading;
+export const selectError = state => state.authentication.error;
+export const selectConnected = state => state.authentication.connected;
 
 export default authenticationSlice.reducer;

@@ -7,7 +7,7 @@ import {
     saveAnswersToStudent,
     selectErrorFetchQcm, selectErrorSaveAnswers,
     selectLoadingQcm,
-    selectQcm, selectSavedQcmFlag, selectSavingAnswers
+    selectQcm, selectResultQcm, selectSavedQcmFlag, selectSavingAnswers
 } from "../homeStudentSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
@@ -15,6 +15,9 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import AlertTitle from "@mui/material/AlertTitle";
 
 function Qcm() {
 
@@ -29,12 +32,14 @@ function Qcm() {
     const savingAnswers = useSelector(selectSavingAnswers);
     const errorSaveAnswers = useSelector(selectErrorSaveAnswers);
 
-    const savedQcmFlag = useSelector(selectSavedQcmFlag)
+    const resultQcm = useSelector(selectResultQcm);
+    const savedQcmFlag = useSelector(selectSavedQcmFlag);
 
     const [indexQuestion, setIndexQuestion] = useState(0);
     const [indexAnswer, setIndexAnswer] = useState(null);
     const [idQuestions, setIdQuestions] = useState([]);
     const [idAnswers, setIdAnswers] = useState([]);
+    const [openResultQcm, setOpenResultQcm] = useState(false);
 
     useEffect(() => {
         dispatch(fetchQcmOfCourse(location.state._idCourse))
@@ -65,8 +70,27 @@ function Qcm() {
     }
 
     useEffect(() => {
-        if(savedQcmFlag) navigate(-1)
-    }, [savedQcmFlag])
+        if(savedQcmFlag) {
+            setOpenResultQcm(true);
+        }
+    }, [savedQcmFlag]);
+
+    const handleCloseResult = () => {
+        setOpenResultQcm(false);
+        navigate(-1);
+    }
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        // border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
 
     return (
         <div className="qcm">
@@ -91,7 +115,7 @@ function Qcm() {
                                             :
                                             ""
                                     }
-                                    <p className="qcm__main__counter">{indexQuestion + 1}</p>
+                                    {/*<p className="qcm__main__counter">{indexQuestion + 1}</p>*/}
                                     <p className="qcm__main__question">{qcm[indexQuestion].question} ?</p>
                                     <RadioGroup
                                         className={"qcm__main__answers"}
@@ -135,6 +159,17 @@ function Qcm() {
 
                             </>
             }
+            <Modal
+                open={openResultQcm}
+                onClose={handleCloseResult}
+            >
+                <Box sx={style}>
+                    <Alert severity="info">
+                        <AlertTitle>Result</AlertTitle>
+                        Your score is : <strong>{resultQcm} %</strong>
+                    </Alert>
+                </Box>
+            </Modal>
         </div>
     );
 }

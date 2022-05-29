@@ -1,7 +1,13 @@
 import React, {useEffect, useRef} from 'react'
 import "./Header.css"
 import {useDispatch, useSelector} from "react-redux";
-import {getAddressAccount, handleLogOut, selectAddressAccount, selectUser} from "../authentication/authenticationSlice";
+import {
+    getAddressAccount,
+    handleLogOut,
+    selectAddressAccount,
+    selectConnected,
+    selectUser
+} from "../authentication/authenticationSlice";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import {
@@ -16,27 +22,31 @@ import {
 
 function Header() {
 
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const user = useSelector(selectUser)
+    const user = useSelector(selectUser);
+    const connected = useSelector(selectConnected);
 
-    const refCourses = useRef()
-    const refProfile = useRef()
-    const refAddCourse = useRef()
+    const refCourses = useRef();
+    const refProfile = useRef();
+    const refAddCourse = useRef();
 
     useEffect(() => {
-        dispatch(getAddressAccount())
+        dispatch(getAddressAccount());
     }, [])
 
     useEffect(() => {
-        console.log("User changed !")
-        if(!user.typeUser) navigate("/");
-        else{
-            if(user.typeUser === TYPE_EMPLOYEE) navigate(URL_EMPLOYER);
-            else goToCourses();
+        if(!connected) {
+            navigate("/");
+            return;
         }
-    }, [user])
+        if(user.typeUser === TYPE_EMPLOYEE) navigate(URL_EMPLOYER);
+        else {
+            refCourses.current.classList.add("header__nav__option__selected");
+            navigate(URL_STUDENT_COURSES);
+        }
+    }, [connected])
 
     const goToCourses = () => {
         refProfile.current.classList.remove("header__nav__option__selected");
@@ -62,7 +72,7 @@ function Header() {
         <div className="header">
             <p className="header__title">E-Learning Chain</p>
             {
-                user ?
+                connected ?
                     <div className="header__nav">
                         {
                             user.typeUser === TYPE_STUDENT ?
@@ -91,7 +101,7 @@ function Header() {
 
             <div className="header__user">
                 {
-                    user.length !== 0 ?
+                    connected ?
                         <>
                             <div className="header__user__information">
                                 <p className="header__user__information__firstName">{user.firstName}</p>
