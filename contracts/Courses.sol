@@ -80,12 +80,19 @@ contract Courses {
         return answers[_idCourse][_indexQuestion];
     }
 
-    function addAddressCertifiedStudent(uint _idCourse, address _adrStudent) public returns(bool _success){
-        certifiedStudents[_idCourse].push(_adrStudent);
-        return true;
-    }
-
     function getAddressesCertifiedStudentsByCourseID(uint _idCourse) public view returns(address[] memory){
         return certifiedStudents[_idCourse];
+    }
+
+    function ifAlreadyCertified(uint _idCourse, address _address) view public returns(bool){
+        for(uint i = 0; i < certifiedStudents[_idCourse].length; i++){
+            if(certifiedStudents[_idCourse][i] == _address) return true;
+        }
+        return false;
+    }
+
+    function addAddressCertifiedStudent(uint _idCourse, address _adrStudent) public returns(bool _success){
+        if(ifAlreadyCertified(_idCourse, _adrStudent)) certifiedStudents[_idCourse].push(_adrStudent);
+        return true;
     }
 }

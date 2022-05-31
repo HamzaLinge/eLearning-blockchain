@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import "./Profile.css";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllMyCourses, selectAllMyCourses, selectLoadAllMyCourses} from "../homeStudentSlice";
@@ -6,6 +6,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import IconButton from "@mui/material/IconButton";
+import {thresholdCertification} from "../../../config";
 
 function Profile() {
 
@@ -14,12 +15,18 @@ function Profile() {
     const allMyCourses = useSelector(selectAllMyCourses);
     const loadAllMyCourses = useSelector(selectLoadAllMyCourses);
 
+    const [filtredCourses, setFiltredCourses] = useState([]);
+
     const refAllCourses = useRef();
     const refCertifiedCourses = useRef();
     const refInProgressCourses = useRef();
 
     useEffect(() => {
-        selectCourses();
+        if(allMyCourses.length !== 0) setFiltredCourses([...allMyCourses]);
+    }, [allMyCourses.length])
+
+    useEffect(() => {
+        refAllCourses.current.classList.add("profile__sideBar__option__selected");
         dispatch(getAllMyCourses());
     }, [])
 
@@ -27,16 +34,19 @@ function Profile() {
         refAllCourses.current.classList.add("profile__sideBar__option__selected");
         refCertifiedCourses.current.classList.remove("profile__sideBar__option__selected");
         refInProgressCourses.current.classList.remove("profile__sideBar__option__selected");
+        setFiltredCourses([...allMyCourses]);
     }
     const selectCertifiedCourses = () => {
         refAllCourses.current.classList.remove("profile__sideBar__option__selected");
         refCertifiedCourses.current.classList.add("profile__sideBar__option__selected");
         refInProgressCourses.current.classList.remove("profile__sideBar__option__selected");
+        setFiltredCourses(allMyCourses.filter(course => course.progress >= thresholdCertification));
     }
     const selectInProgressCourses = () => {
         refAllCourses.current.classList.remove("profile__sideBar__option__selected");
         refCertifiedCourses.current.classList.remove("profile__sideBar__option__selected");
         refInProgressCourses.current.classList.add("profile__sideBar__option__selected");
+        setFiltredCourses(allMyCourses.filter(course => course.progress < thresholdCertification));
     }
 
     return (
@@ -57,7 +67,7 @@ function Profile() {
                     loadAllMyCourses ?
                         <CircularProgress color="success" />
                         :
-                        allMyCourses.length === 0 ?
+                        filtredCourses.length === 0 ?
                             <Alert severity="info">You are not taking any courses !</Alert>
                             :
                             <div className="profile__main__table">
@@ -68,8 +78,8 @@ function Profile() {
                                     <p className="profile__main__table__header__head">Download Course (Pdf)</p>
                                 </div>
                                 {
-                                    allMyCourses.map((course, indexCourse) => (
-                                        <div className="profile__main__table__row">
+                                    filtredCourses.map((course, indexCourse) => (
+                                        <div className={"profile__main__table__row"}>
                                             <p className="profile__main__table__row__cell">{indexCourse + 1}</p>
                                             <p className="profile__main__table__row__cell">{course.title}</p>
                                             <p className="profile__main__table__row__cell">{course.progress}</p>

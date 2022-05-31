@@ -45,11 +45,15 @@ contract Authentication {
         return false;
     }
 
-    function logIn(string memory _password) public view returns(address, string memory, string memory, string memory) {
+    function logIn(string memory _password) public view returns(string memory, string memory, string memory) {
         if(keccak256(bytes(users[msg.sender].password)) == keccak256(bytes(_password))) {
-            return (msg.sender, users[msg.sender].firstName, users[msg.sender].familyName, users[msg.sender].typeUser);
+            return (users[msg.sender].firstName, users[msg.sender].familyName, users[msg.sender].typeUser);
         }
-        return (address(0), "", "", "");
+        return ("", "", "");
+    }
+
+    function getStudentByAddress(address _addressStudent) public view returns(address, string memory, string memory){
+        return (users[_addressStudent].addressAccount, users[_addressStudent].firstName, users[_addressStudent].familyName);
     }
 
     //    Courses ---------------------------------------------------------

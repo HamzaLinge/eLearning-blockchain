@@ -20,6 +20,7 @@ export const store = configureStore({
           ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
           // Ignore these paths in the state
           ignoredPaths: ['items.dates'],
+            serializableCheck: false
         },
       }),
 });

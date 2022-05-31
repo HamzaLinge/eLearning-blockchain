@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import {AuthenticationContractAddress, CoursesContractAddress} from "../../config"
+import {AuthenticationContractAddress, CoursesContractAddress, thresholdCertification} from "../../config"
 import Courses from "../../contracts/Courses.json"
 import {ethers} from 'ethers'
 import Authentication from "../../contracts/Authentication.json";
@@ -95,7 +95,7 @@ export const fetchQcmOfCourse = createAsyncThunk(
 
 export const saveAnswersToStudent = createAsyncThunk(
     'saveAnswersToStudent',
-    async ({_idCourse, _idQuestions, _idAnswers}) => {
+    async ({_addressAccount, _idCourse, _idQuestions, _idAnswers}) => {
         if(window.ethereum !== 'undefined'){
             const contractAuthentication = await initialProviderAuthentication();
             const contractCourses = await initialProviderCourses();
@@ -108,7 +108,9 @@ export const saveAnswersToStudent = createAsyncThunk(
                     const _answers = await contractCourses.getAnswersOfQuestion(_idCourse, _questionsAnswersStudent[_indexQuestion].idQuestion);
                     if(_answers[_questionsAnswersStudent[_indexQuestion].idAnswer].flag) _totalRightAnswer++;
                 }
-                return {errorFlag: false, content: _totalRightAnswer * 100 / _questions.length};
+                const progress = parseFloat(_totalRightAnswer * 100 / _questions.length).toFixed(2);
+                if(progress >= thresholdCertification) await contractCourses.addAddressCertifiedStudent(_idCourse, _addressAccount);
+                return {errorFlag: false, content: progress};
             } catch (e) {
                 console.log('Error save answers : ', e);
                 return {errorFlag: true, content: "Blockchain : Error Error save answers !"}
@@ -167,7 +169,7 @@ export const getAllMyCourses = createAsyncThunk(
                         urlPdf: _course.urlPdf,
                         urlImage: _course.urlImage,
                         timestamp: _course.timestamp,
-                        progress: _totalRightAnswer * 100 / _questions.length,
+                        progress: parseFloat(_totalRightAnswer * 100 / _questions.length).toFixed(2),
                     })
                 }
                 console.log(_allMyCourses);

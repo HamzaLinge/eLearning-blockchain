@@ -18,6 +18,7 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import AlertTitle from "@mui/material/AlertTitle";
+import {selectAddressAccount} from "../../authentication/authenticationSlice";
 
 function Qcm() {
 
@@ -25,6 +26,7 @@ function Qcm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const addressAccount = useSelector(selectAddressAccount);
     const qcm = useSelector(selectQcm);
     const loadingQcm = useSelector(selectLoadingQcm);
     const errorFetchQcm = useSelector(selectErrorFetchQcm);
@@ -56,6 +58,7 @@ function Qcm() {
         setIdQuestions([...idQuestions, qcm[indexQuestion].indexQuestion])
         setIdAnswers([...idAnswers, parseInt(indexAnswer)])
         dispatch(saveAnswersToStudent({
+            _addressAccount: addressAccount,
             _idCourse: location.state._idCourse,
             _idQuestions: [...idQuestions, qcm[indexQuestion].indexQuestion],
             _idAnswers: [...idAnswers, parseInt(indexAnswer)]

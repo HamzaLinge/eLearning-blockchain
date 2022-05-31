@@ -73,7 +73,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 400px;
+    /*width: 400px;*/
     height: 100%;
     position: absolute;
     top: 0;
@@ -81,7 +81,7 @@
     transform: translateX(-50%);
 }
 .header__nav__option{
-    width: 50%;
+    width: 200px;
     height: 100%;
     transition: 0.3s;
     display: flex;

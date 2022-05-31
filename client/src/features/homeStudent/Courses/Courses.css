@@ -1,7 +1,7 @@
 .courses{
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: auto auto auto;
     align-items: center;
     justify-content: space-evenly;
-    width: 90%;
+    width: 100%;
 }

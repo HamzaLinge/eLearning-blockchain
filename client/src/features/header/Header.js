@@ -19,6 +19,7 @@ import {
     URL_STUDENT_COURSES,
     URL_STUDENT_PROFILE
 } from "../../config";
+import {toggleOpenSearch} from "../homeEmployer/homeEmployerSlice";
 
 function Header() {
 
@@ -50,21 +51,21 @@ function Header() {
 
     const goToCourses = () => {
         refProfile.current.classList.remove("header__nav__option__selected");
-        if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
+        // if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
         refCourses.current.classList.add("header__nav__option__selected");
         navigate(URL_STUDENT_COURSES);
     }
 
     const goToProfile = () => {
         refCourses.current.classList.remove("header__nav__option__selected");
-        if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
+        // if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
         refProfile.current.classList.add("header__nav__option__selected");
         navigate(URL_STUDENT_PROFILE);
     }
     const goToAddCourse = () => {
-        refProfile.current.classList.remove("header__nav__option__selected");
-        refCourses.current.classList.remove("header__nav__option__selected");
-        if(DEV_MODE) refAddCourse.current.classList.add("header__nav__option__selected");
+        // refProfile.current.classList.remove("header__nav__option__selected");
+        // refCourses.current.classList.remove("header__nav__option__selected");
+        // if(DEV_MODE) refAddCourse.current.classList.add("header__nav__option__selected");
         navigate(URL_ADD_COURSE);
     }
 
@@ -79,20 +80,19 @@ function Header() {
                                 <>
                                     <p ref={refCourses} className="header__nav__option" onClick={goToCourses}>Courses</p>
                                     <p ref={refProfile} className="header__nav__option" onClick={goToProfile}>Profile</p>
-                                    {
-                                        DEV_MODE ?
-                                            <p ref={refAddCourse} className={"header__nav__option"} onClick={goToAddCourse}>Add Course</p>
-                                            :
-                                            ""
-                                    }
-
                                 </>
                                 :
                                 user.typeUser === TYPE_EMPLOYEE ?
-                                    <p className="header__nav__option">Search</p>
+                                    <p className="header__nav__option" onClick={() => dispatch(toggleOpenSearch())}>Search</p>
                                     :
                                     ""
 
+                        }
+                        {
+                            DEV_MODE ?
+                                <p ref={refAddCourse} className={"header__nav__option"} onClick={goToAddCourse}>Add Course</p>
+                                :
+                                ""
                         }
                     </div>
                     :

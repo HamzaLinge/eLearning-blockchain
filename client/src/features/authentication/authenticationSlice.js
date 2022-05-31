@@ -96,7 +96,6 @@ export const authenticationSlice = createSlice({
                 state.error.flag = true;
                 state.error.message = action.payload.msg;
             } else{
-                // state.user.addressAccount = action.payload.response[0]
                 state.user.firstName = action.payload.response.firstName;
                 state.user.familyName = action.payload.response.familyName;
                 state.user.typeUser = action.payload.response.typeUser;
@@ -121,10 +120,9 @@ export const authenticationSlice = createSlice({
                 state.error.flag = true
                 state.error.message = action.payload.msg
             } else {
-                // state.user.addressAccount = action.payload.response[0];
-                state.user.firstName = action.payload.response[1];
-                state.user.familyName = action.payload.response[2];
-                state.user.typeUser = action.payload.response[3];
+                state.user.firstName = action.payload.response[0];
+                state.user.familyName = action.payload.response[1];
+                state.user.typeUser = action.payload.response[2];
                 state.connected = true;
             }
             state.loading = false
