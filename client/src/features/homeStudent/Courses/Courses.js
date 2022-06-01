@@ -24,7 +24,7 @@ function Courses() {
     }, [])
 
     return (
-        <div className="courses">
+        <div className={`courses ${courses ? courses.length === 0 ? "courses__empty" : "" : ""}`}>
             {
                 loadingCourses ?
                     <div className="courses__loading">

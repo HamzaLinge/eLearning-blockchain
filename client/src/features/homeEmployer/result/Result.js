@@ -22,23 +22,23 @@ function Result() {
                         certifiedStudents.length === 0 ?
                             <Alert severity="info"> No results found</Alert>
                             :
-                            <>
-                                <div className="result__header">
-                                    <p className="result__header__head"></p>
-                                    <p className="result__header__head">First Name</p>
-                                    <p className="result__header__head">Family Name</p>
+                            <div className={"result__main"}>
+                                <div className="result__main__header">
+                                    <p className="result__main__header__number result__main__header__head">N</p>
+                                    <p className="result__main__header__firstName result__main__header__head">First Name</p>
+                                    <p className="result__main__header__head">Family Name</p>
                                 </div>
                                 {
                                     certifiedStudents.map((s, i) => (
-                                        <div key={i} className="result__row">
-                                            <p className="result__row__filed"></p>
-                                            <p className="result__row__filed">{s.firstName}</p>
-                                            <p className="result__row__filed">(s.familyName)</p>
-                                            <p className="result__row__address">(s.addressAccount)</p>
+                                        <div key={i} className="result__main__row">
+                                            <p className="result__main__row__number result__main__row__filed">{i+1}</p>
+                                            <p className="result__main__row__firstName result__main__row__filed">{s.firstName}</p>
+                                            <p className="result__main__row__filed">{s.familyName}</p>
+                                            <p className="result__main__row__address">{s.addressAccount}</p>
                                         </div>
                                     ))
                                 }
-                            </>
+                            </div>
                         :
                         ""
 

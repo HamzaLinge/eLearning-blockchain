@@ -45,7 +45,8 @@ function Search() {
         uploadCourses();
     }, [])
 
-    const handleSearch = () => {
+    const handleSearch = e => {
+        e.preventDefault();
         dispatch(setDashboard({
             titleCourse: courses[idCourse].title,
             firstName,
@@ -56,6 +57,9 @@ function Search() {
             _firstName: firstName,
             _familyName: familyName
         }))
+        setIdCourse(undefined);
+        setFirstName("");
+        setFamilyName("");
         dispatch(toggleOpenSearch());
     }
 
@@ -69,7 +73,7 @@ function Search() {
             open={openSearch}
             onClose={closeSearch}
         >
-            <Box className={"search"}>
+            <form className={"search"}>
                 <FormControl className={"search__select"}>
                     <InputLabel id="select-label-courses">Courses</InputLabel>
                     <Select
@@ -115,12 +119,13 @@ function Search() {
                     onChange={e => setFamilyName(e.target.value)}
                 />
                 <Button
+                    type={"submit"}
                     variant="contained"
                     className={"search__button"}
                     disabled={!idCourse || !firstName || !familyName}
                     onClick={handleSearch}
-                >Contained</Button>
-            </Box>
+                >Search</Button>
+            </form>
         </Modal>
     );
 }

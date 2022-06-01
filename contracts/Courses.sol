@@ -13,6 +13,7 @@ contract Courses {
 
     constructor () {
         nbrCourses = 0;
+//        certifiedStudents[0].push(msg.sender);
     }
 
     struct Answer {
@@ -92,7 +93,7 @@ contract Courses {
     }
 
     function addAddressCertifiedStudent(uint _idCourse, address _adrStudent) public returns(bool _success){
-        if(ifAlreadyCertified(_idCourse, _adrStudent)) certifiedStudents[_idCourse].push(_adrStudent);
+        if(!ifAlreadyCertified(_idCourse, _adrStudent)) certifiedStudents[_idCourse].push(_adrStudent);
         return true;
     }
 }

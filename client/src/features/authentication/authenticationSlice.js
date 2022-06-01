@@ -40,9 +40,9 @@ export const signUp__blockchain = createAsyncThunk(
                 // return {error: false, response: await contractAuthentication.logIn(signUpInputs.password)}
                 return {error: false, response: {firstName: signUpInputs.firstName, familyName: signUpInputs.familyName, typeUser: signUpInputs.typeUser}}
             } catch (e) {
-                console.log('Error sign up to the blockchain : ', e);
+                console.log('Error sign up to blockchain : ', e);
                 // console.log("wesh")
-                return {error: true, msg: "Error to sign in to the blockchain !"}
+                return {error: true, msg: "Error to sign in to blockchain !"}
             }
         }
     }
@@ -60,8 +60,8 @@ export const logIn__blockchain = createAsyncThunk(
                 if(!response2) return {error: true, msg: "Incorrect password !"}
                 return {error: false, response: await contractAuthentication.logIn(_password)}
             } catch (e) {
-                console.log('Error log in to the blockchain : ', e);
-                return {error: true, msg: "Error to log in to the blockchain !"}
+                console.log('Error log in to blockchain : ', e);
+                return {error: true, msg: "Error to log in to blockchain !"}
             }
         }
     }

@@ -32,12 +32,13 @@ export const fetchCertifiedStudents = createAsyncThunk(
             try{
                 const ifCoursesIsEmpty = await contractCourses.ifCoursesIsEmpty();
                 if(ifCoursesIsEmpty) return {errorFlag: false, content: []};
-                const addresses = contractCourses.getAddressesCertifiedStudentsByCourseID(_idCourse);
+                const addresses = await contractCourses.getAddressesCertifiedStudentsByCourseID(_idCourse);
+                console.log(addresses);
                 if(addresses.length === 0) return {errorFlag: false, content: []};
                 let result = [];
                 for(let i = 0; i < addresses.length; i++){
                     const student = await contractAuthentication.getStudentByAddress(addresses[i]);
-                    if(String(student[1]).toLowerCase() === String(_firstName).toLowerCase() ||
+                    if(String(student[1]).toLowerCase() === String(_firstName).toLowerCase() &&
                         String(student[2]).toLowerCase() === String(_familyName).toLowerCase()){
                         result.push({
                             addressAccount: student[0],

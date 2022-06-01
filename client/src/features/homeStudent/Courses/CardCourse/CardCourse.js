@@ -76,8 +76,8 @@ function CardCourse({_idCourse, _title, _resume, _urlPdf, _urlImage, _timestamp}
             <p className="cardCourse__title">{_title}</p>
             <p className="cardCourse__resume">
                 {
-                    _resume.length >= 150 ?
-                        _resume.substr(0, 150).concat(". . .")
+                    _resume.length >= 25 ?
+                        _resume.substr(0, 25).concat(". . .")
                         :
                         _resume
                 }
