@@ -1,7 +1,7 @@
-export const AuthenticationContractAddress = "0x793AB96eeE44813864f0bC94d4e6F054CF92014C"
-export const CoursesContractAddress = "0x1Df9BdA12DacD927722716E7FED22102372264F3"
+export const AuthenticationContractAddress = "0x0aaE49A55999F24a0E7C73Ab0FBe196197246F69"
+export const CoursesContractAddress = "0x18f80a990C3e27E36d5Bc0bC780C7b5CFa1D76DD"
 
-export const TYPE_EMPLOYEE = "employee"
+export const TYPE_EMPLOYEE = "employer"
 export const TYPE_STUDENT = "student"
 
 export const URL_STUDENT_COURSES = "/student/courses"
@@ -12,7 +12,5 @@ export const URL_STUDENT_COURSES_COURSE = "/student/courses/course"
 export const URL_QCM = "/student/courses/course/qcm"
 
 export const thresholdCertification = 70;
-
-export const pathCoursesMeta = "../datas/"
 
 export const DEV_MODE = true

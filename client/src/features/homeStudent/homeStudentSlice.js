@@ -3,6 +3,8 @@ import {AuthenticationContractAddress, CoursesContractAddress, thresholdCertific
 import Courses from "../../contracts/Courses.json"
 import {ethers} from 'ethers'
 import Authentication from "../../contracts/Authentication.json";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import {fs} from "fs-extra";
 
 const initialState = {
     courses: [],
@@ -93,9 +95,26 @@ export const fetchQcmOfCourse = createAsyncThunk(
     }
 )
 
+async function setPDFCertificate(){
+    const doc = await PDFDocument.load(fs.readFileSync("./template-certificate.pdf"));
+    // (readFileSync("./template-certificate.pdf"));
+    const courierBoldFont = await doc.embedFont(StandardFonts.Courier);
+    const firstPage = doc.getPage(0);
+
+    firstPage.moveTo(72, 570);
+    firstPage.drawText(new Date().toUTCString(), {
+        font: courierBoldFont,
+        size: 12,
+    });
+
+    fs.writeFileSync("certificateMotherFucker.pdf", await doc.save());
+}
+
 export const saveAnswersToStudent = createAsyncThunk(
     'saveAnswersToStudent',
     async ({_addressAccount, _idCourse, _idQuestions, _idAnswers}) => {
+        if(_idQuestions.length === 0 || _idAnswers.length === 0)
+            return {errorFlag: true, content: "No answer available to save, please repeat the MCQ !"};
         if(window.ethereum !== 'undefined'){
             const contractAuthentication = await initialProviderAuthentication();
             const contractCourses = await initialProviderCourses();
@@ -104,12 +123,16 @@ export const saveAnswersToStudent = createAsyncThunk(
                 const _questions = await contractCourses.getQuestionsOfCourse(_idCourse);
                 const _questionsAnswersStudent = await contractAuthentication.getQuestionsAnswersOfCourseForStudent(_idCourse);
                 let _totalRightAnswer = 0;
-                for(let _indexQuestion = 0; _indexQuestion < _questions.length; _indexQuestion++){
+                for(let _indexQuestion = 0; _indexQuestion < _questionsAnswersStudent.length; _indexQuestion++){
                     const _answers = await contractCourses.getAnswersOfQuestion(_idCourse, _questionsAnswersStudent[_indexQuestion].idQuestion);
                     if(_answers[_questionsAnswersStudent[_indexQuestion].idAnswer].flag) _totalRightAnswer++;
                 }
                 const progress = parseFloat(_totalRightAnswer * 100 / _questions.length).toFixed(2);
-                if(progress >= thresholdCertification) await contractCourses.addAddressCertifiedStudent(_idCourse, _addressAccount);
+                if(progress >= thresholdCertification){
+                    await contractCourses.addAddressCertifiedStudent(_idCourse, _addressAccount);
+                    // Set PDF Certificate
+
+                }
                 return {errorFlag: false, content: progress};
             } catch (e) {
                 console.log('Error save answers : ', e);

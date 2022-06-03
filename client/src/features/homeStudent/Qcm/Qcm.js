@@ -15,7 +15,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
+import Modal, {modalClasses} from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import AlertTitle from "@mui/material/AlertTitle";
 import {selectAddressAccount} from "../../authentication/authenticationSlice";
@@ -62,13 +62,20 @@ function Qcm() {
             _idCourse: location.state._idCourse,
             _idQuestions: [...idQuestions, qcm[indexQuestion].indexQuestion],
             _idAnswers: [...idAnswers, parseInt(indexAnswer)]
-        }))
+        }));
     }
 
     const cancelQcm = () => {
         if(idQuestions.length === 0) navigate(-1)
         else {
-            dispatch(saveAnswersToStudent({_idCourse: location.state._idCourse, _idQuestions: idQuestions, _idAnswers: idAnswers}))
+            if(idQuestions.length !== 0 && idAnswers.length !== 0){
+                dispatch(saveAnswersToStudent({
+                    _addressAccount: addressAccount,
+                    _idCourse: location.state._idCourse,
+                    _idQuestions: idQuestions,
+                    _idAnswers: idAnswers
+                }));
+            }
         }
     }
 
@@ -170,6 +177,7 @@ function Qcm() {
                     <Alert severity="info">
                         <AlertTitle>Result</AlertTitle>
                         Your score is : <strong>{resultQcm} %</strong>
+
                     </Alert>
                 </Box>
             </Modal>

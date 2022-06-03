@@ -7,11 +7,13 @@ import Alert from "@mui/material/Alert";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import IconButton from "@mui/material/IconButton";
 import {thresholdCertification} from "../../../config";
+import {selectUser} from "../../authentication/authenticationSlice";
 
 function Profile() {
 
     const dispatch = useDispatch();
 
+    const user = useSelector(selectUser)
     const allMyCourses = useSelector(selectAllMyCourses);
     const loadAllMyCourses = useSelector(selectLoadAllMyCourses);
 
@@ -49,6 +51,10 @@ function Profile() {
         setFiltredCourses(allMyCourses.filter(course => course.progress < thresholdCertification));
     }
 
+    const downloadCertificate = () => {
+        console.log("Download Certificate !");
+    }
+
     return (
         <div className="profile">
             <div className="profile__sideBar">
@@ -65,7 +71,7 @@ function Profile() {
             <div className="profile__main">
                 {
                     loadAllMyCourses ?
-                        <CircularProgress color="success" />
+                        <CircularProgress/>
                         :
                         filtredCourses.length === 0 ?
                             <Alert severity="info">You are not taking any courses !</Alert>
@@ -75,7 +81,8 @@ function Profile() {
                                     <p className="profile__main__table__header__head profile__main__table__header__number"></p>
                                     <p className="profile__main__table__header__head">Title</p>
                                     <p className="profile__main__table__header__head">Progress (%)</p>
-                                    <p className="profile__main__table__header__head">Download Course (Pdf)</p>
+                                    {/*<p className="profile__main__table__header__head">Download Course (Pdf)</p>*/}
+                                    <p className="profile__main__table__header__head"></p>
                                 </div>
                                 {
                                     filtredCourses.map((course, indexCourse) => (
@@ -83,16 +90,30 @@ function Profile() {
                                             <p className="profile__main__table__row__cell">{indexCourse + 1}</p>
                                             <p className="profile__main__table__row__cell">{course.title}</p>
                                             <p className="profile__main__table__row__cell">{course.progress}</p>
+                                            {/*<p className="profile__main__table__row__cell">*/}
+                                            {/*    <IconButton className="cardCourse__links__link"*/}
+                                            {/*                variant="contained"*/}
+                                            {/*                color={"success"}*/}
+                                            {/*                size={"small"}*/}
+                                            {/*                onClick={() => {*/}
+                                            {/*                    window.open(`https://ipfs.io/ipfs/${course.urlPdf}`, "_blank")*/}
+                                            {/*                }}>*/}
+                                            {/*        <PictureAsPdfIcon fontSize="inherit" />*/}
+                                            {/*    </IconButton>*/}
+                                            {/*</p>*/}
                                             <p className="profile__main__table__row__cell">
-                                                <IconButton className="cardCourse__links__link"
-                                                            variant="contained"
-                                                            color={"success"}
-                                                            size={"small"}
-                                                            onClick={() => {
-                                                                window.open(`https://ipfs.io/ipfs/${course.urlPdf}`, "_blank")
-                                                            }}>
-                                                    <PictureAsPdfIcon fontSize="inherit" />
-                                                </IconButton>
+                                                {
+                                                    course.progress >= thresholdCertification ?
+                                                        <IconButton className="cardCourse__links__link"
+                                                                    variant="contained"
+                                                                    color={"success"}
+                                                                    size={"small"}
+                                                                    onClick={downloadCertificate}>
+                                                            <PictureAsPdfIcon fontSize="inherit" />
+                                                        </IconButton>
+                                                        :
+                                                        ""
+                                                }
                                             </p>
                                         </div>
                                     ))
