@@ -8,7 +8,8 @@ import {Routes} from "react-router";
 import Courses from "./features/homeStudent/Courses/Courses";
 import Profile from "./features/homeStudent/Profile/Profile";
 import {
-    URL_ADD_COURSE,
+    URL_ADMIN_ADD_COURSE,
+    URL_CERTIFICATE,
     URL_EMPLOYER,
     URL_QCM,
     URL_STUDENT_COURSES,
@@ -19,6 +20,7 @@ import {AddCourse} from "./features/setCourse/addCourse/AddCourse";
 import Course from "./features/homeStudent/Course/Course";
 import Qcm from "./features/homeStudent/Qcm/Qcm";
 import HomeEmployer from "./features/homeEmployer/HomeEmployer";
+import Certificate from "./features/homeStudent/certificate/Certificate";
 
 
 function App() {
@@ -31,10 +33,11 @@ function App() {
                   <Route path="/signUp" element={<SignUp />} />
                   <Route path={URL_STUDENT_COURSES} element={<Courses />} />
                   <Route path={URL_STUDENT_PROFILE} element={<Profile />} />
-                  <Route path={URL_ADD_COURSE} element={<AddCourse />} />
+                  <Route path={URL_ADMIN_ADD_COURSE} element={<AddCourse />} />
                   <Route path={URL_STUDENT_COURSES_COURSE + "/:idCourse"} element={<Course />} />
                   <Route path={URL_QCM} element={<Qcm />} />
                   <Route path={URL_EMPLOYER} element={<HomeEmployer />} />
+                  <Route path={URL_CERTIFICATE + "/:idCourse"} element={<Certificate />} />
               </Routes>
           </div>
       </>

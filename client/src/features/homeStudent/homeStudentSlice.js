@@ -1,10 +1,10 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import {AuthenticationContractAddress, CoursesContractAddress, thresholdCertification} from "../../config"
-import Courses from "../../contracts/Courses.json"
-import {ethers} from 'ethers'
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {AuthenticationContractAddress, CoursesContractAddress, thresholdCertification} from "../../config";
+import Courses from "../../contracts/Courses.json";
+import {ethers} from 'ethers';
 import Authentication from "../../contracts/Authentication.json";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import {fs} from "fs-extra";
+// import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+// const fs = require("graceful-fs");
 
 const initialState = {
     courses: [],
@@ -26,6 +26,21 @@ const initialState = {
 
     allMyCourses: [],
     loadAllMyCourses: false,
+}
+export async function setPDFCertificate(){
+    // const file = await fs.readFile("./template-certificate.pdf");
+    // console.log(file);
+    // const doc = await PDFDocument.load(file);
+    // const courierBoldFont = await doc.embedFont(StandardFonts.Courier);
+    // const firstPage = doc.getPage(0);
+    //
+    // firstPage.moveTo(72, 570);
+    // firstPage.drawText(new Date().toUTCString(), {
+    //     font: courierBoldFont,
+    //     size: 12,
+    // });
+    //
+    // await fs.writeFile("certificate-MotherFucker.pdf", await doc.save());
 }
 
 async function initialProviderAuthentication () {
@@ -95,21 +110,6 @@ export const fetchQcmOfCourse = createAsyncThunk(
     }
 )
 
-async function setPDFCertificate(){
-    const doc = await PDFDocument.load(fs.readFileSync("./template-certificate.pdf"));
-    // (readFileSync("./template-certificate.pdf"));
-    const courierBoldFont = await doc.embedFont(StandardFonts.Courier);
-    const firstPage = doc.getPage(0);
-
-    firstPage.moveTo(72, 570);
-    firstPage.drawText(new Date().toUTCString(), {
-        font: courierBoldFont,
-        size: 12,
-    });
-
-    fs.writeFileSync("certificateMotherFucker.pdf", await doc.save());
-}
-
 export const saveAnswersToStudent = createAsyncThunk(
     'saveAnswersToStudent',
     async ({_addressAccount, _idCourse, _idQuestions, _idAnswers}) => {
@@ -122,16 +122,18 @@ export const saveAnswersToStudent = createAsyncThunk(
                 await contractAuthentication.addNewCourseToStudent(_idCourse, _idQuestions, _idAnswers);
                 const _questions = await contractCourses.getQuestionsOfCourse(_idCourse);
                 const _questionsAnswersStudent = await contractAuthentication.getQuestionsAnswersOfCourseForStudent(_idCourse);
+                const _myQuestionsAnswersStudent = [..._questionsAnswersStudent];
+                for(let k = 0; k < _idQuestions.length; k++){
+                    _myQuestionsAnswersStudent.push({idQuestion: _idQuestions[k], idAnswer: _idAnswers[k]});
+                }
                 let _totalRightAnswer = 0;
-                for(let _indexQuestion = 0; _indexQuestion < _questionsAnswersStudent.length; _indexQuestion++){
-                    const _answers = await contractCourses.getAnswersOfQuestion(_idCourse, _questionsAnswersStudent[_indexQuestion].idQuestion);
-                    if(_answers[_questionsAnswersStudent[_indexQuestion].idAnswer].flag) _totalRightAnswer++;
+                for(let _indexQuestion = 0; _indexQuestion < _myQuestionsAnswersStudent.length; _indexQuestion++){
+                    const _answers = await contractCourses.getAnswersOfQuestion(_idCourse, _myQuestionsAnswersStudent[_indexQuestion].idQuestion);
+                    if(_answers[_myQuestionsAnswersStudent[_indexQuestion].idAnswer].flag) _totalRightAnswer++;
                 }
                 const progress = parseFloat(_totalRightAnswer * 100 / _questions.length).toFixed(2);
                 if(progress >= thresholdCertification){
                     await contractCourses.addAddressCertifiedStudent(_idCourse, _addressAccount);
-                    // Set PDF Certificate
-
                 }
                 return {errorFlag: false, content: progress};
             } catch (e) {
@@ -141,7 +143,6 @@ export const saveAnswersToStudent = createAsyncThunk(
         }
     }
 )
-
 
 export const checkIfQcmOfCoursePassed = createAsyncThunk(
     'checkIfQcmOfCoursePassed',
@@ -209,6 +210,9 @@ export const homeStudentSlice = createSlice({
     name: 'homeStudent',
     initialState,
     reducers: {
+        turnFalseSavedQcmFlag: state => {
+            state.savedQcmFlag = false;
+        }
     },
     extraReducers: {
         // Fetch Courses ------------------------------------------------------------------------------------------
@@ -295,7 +299,7 @@ export const homeStudentSlice = createSlice({
     },
 });
 
-// export const {} = homeStudentSlice.actions;
+export const {turnFalseSavedQcmFlag} = homeStudentSlice.actions;
 
 export const selectCourses = state => state.homeStudent.courses;
 export const selectLoadingCourses = state => state.homeStudent.loadingCourses;

@@ -1,0 +1,25 @@
+.certificate{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #FBFBFB;
+    position: relative;
+}
+.certificate__title{
+    font-size: 6rem;
+    margin: 50px 0 100px 0;
+    border-bottom: 1px solid #FBFBFB;
+}
+.certificate__text__I{
+    margin-bottom: 60px;
+    background-color: #FBFBFB;
+    border-radius: 5px;
+    padding: 30px;
+    color: black;
+}
+.certificate__date{
+    align-self: flex-end;
+    position: absolute;
+    bottom: 50px;
+}

@@ -7,7 +7,7 @@ import {
     saveAnswersToStudent,
     selectErrorFetchQcm, selectErrorSaveAnswers,
     selectLoadingQcm,
-    selectQcm, selectResultQcm, selectSavedQcmFlag, selectSavingAnswers
+    selectQcm, selectResultQcm, selectSavedQcmFlag, selectSavingAnswers, turnFalseSavedQcmFlag
 } from "../homeStudentSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
@@ -18,7 +18,8 @@ import Button from "@mui/material/Button";
 import Modal, {modalClasses} from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import AlertTitle from "@mui/material/AlertTitle";
-import {selectAddressAccount} from "../../authentication/authenticationSlice";
+import {selectAddressAccount, selectUser} from "../../authentication/authenticationSlice";
+import {thresholdCertification, URL_CERTIFICATE} from "../../../config";
 
 function Qcm() {
 
@@ -26,6 +27,7 @@ function Qcm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const user = useSelector(selectUser);
     const addressAccount = useSelector(selectAddressAccount);
     const qcm = useSelector(selectQcm);
     const loadingQcm = useSelector(selectLoadingQcm);
@@ -87,6 +89,7 @@ function Qcm() {
 
     const handleCloseResult = () => {
         setOpenResultQcm(false);
+        dispatch(turnFalseSavedQcmFlag());
         navigate(-1);
     }
 
@@ -174,11 +177,33 @@ function Qcm() {
                 onClose={handleCloseResult}
             >
                 <Box sx={style}>
-                    <Alert severity="info">
-                        <AlertTitle>Result</AlertTitle>
-                        Your score is : <strong>{resultQcm} %</strong>
+                    {
+                        resultQcm < thresholdCertification ?
+                            <Alert severity="info">
+                                <AlertTitle>Result</AlertTitle>
+                                Your score is : <strong>{resultQcm} %</strong>
+                            </Alert>
+                            :
+                            <Alert severity="success" size="small">
+                                <AlertTitle>Result</AlertTitle>
+                                Your score is : <strong>{resultQcm} %</strong>
+                                <Button variant="contained"
+                                        color="success"
+                                        onClick={()=>navigate(URL_CERTIFICATE + "/" + location.state._idCourse,{
+                                            state:{
+                                                firstName: user.firstName,
+                                                familyName: user.familyName,
+                                                titleCourse: location.state._title,
+                                                addressAccount: addressAccount
+                                            },
+                                            replace: true
+                                        })}
+                                >
+                                    View my certificate
+                                </Button>
+                            </Alert>
+                    }
 
-                    </Alert>
                 </Box>
             </Modal>
         </div>

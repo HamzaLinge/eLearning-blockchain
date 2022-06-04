@@ -6,14 +6,17 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import IconButton from "@mui/material/IconButton";
-import {thresholdCertification} from "../../../config";
-import {selectUser} from "../../authentication/authenticationSlice";
+import {thresholdCertification, URL_CERTIFICATE} from "../../../config";
+import {selectAddressAccount, selectUser} from "../../authentication/authenticationSlice";
+import {useNavigate} from "react-router-dom";
 
 function Profile() {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const user = useSelector(selectUser)
+    const user = useSelector(selectUser);
+    const addressAccount = useSelector(selectAddressAccount);
     const allMyCourses = useSelector(selectAllMyCourses);
     const loadAllMyCourses = useSelector(selectLoadAllMyCourses);
 
@@ -49,10 +52,6 @@ function Profile() {
         refCertifiedCourses.current.classList.remove("profile__sideBar__option__selected");
         refInProgressCourses.current.classList.add("profile__sideBar__option__selected");
         setFiltredCourses(allMyCourses.filter(course => course.progress < thresholdCertification));
-    }
-
-    const downloadCertificate = () => {
-        console.log("Download Certificate !");
     }
 
     return (
@@ -108,7 +107,16 @@ function Profile() {
                                                                     variant="contained"
                                                                     color={"success"}
                                                                     size={"small"}
-                                                                    onClick={downloadCertificate}>
+                                                                    onClick={()=>{
+                                                                        navigate(URL_CERTIFICATE + "/" + course.idCourse, {
+                                                                            state:{
+                                                                                firstName: user.firstName,
+                                                                                familyName: user.familyName,
+                                                                                titleCourse: course.title,
+                                                                                addressAccount: addressAccount
+                                                                            }
+                                                                        })
+                                                                    }}>
                                                             <PictureAsPdfIcon fontSize="inherit" />
                                                         </IconButton>
                                                         :

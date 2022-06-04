@@ -11,15 +11,16 @@ import {
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import {
-    DEV_MODE,
+    DEV_MODE, ROLE_ADMIN,
     TYPE_EMPLOYEE,
     TYPE_STUDENT,
-    URL_ADD_COURSE,
+    URL_ADMIN_ADD_COURSE, URL_ADMIN_LIST_COURSES,
     URL_EMPLOYER,
     URL_STUDENT_COURSES,
     URL_STUDENT_PROFILE
 } from "../../config";
 import {toggleOpenSearch} from "../homeEmployer/homeEmployerSlice";
+import {setPDFCertificate} from "../homeStudent/homeStudentSlice";
 
 function Header() {
 
@@ -32,6 +33,7 @@ function Header() {
     const refCourses = useRef();
     const refProfile = useRef();
     const refAddCourse = useRef();
+    const refListCourses = useRef();
 
     useEffect(() => {
         dispatch(getAddressAccount());
@@ -42,16 +44,31 @@ function Header() {
             navigate("/");
             return;
         }
-        if(user.typeUser === TYPE_EMPLOYEE) navigate(URL_EMPLOYER);
-        else {
-            refCourses.current.classList.add("header__nav__option__selected");
-            navigate(URL_STUDENT_COURSES);
+        if(user.role === ROLE_ADMIN){
+            refListCourses.current.classList.add("header__nav__option__selected");
+
+        }else{
+            if(user.typeUser === TYPE_EMPLOYEE) navigate(URL_EMPLOYER);
+            else {
+                refCourses.current.classList.add("header__nav__option__selected");
+                navigate(URL_STUDENT_COURSES);
+            }
         }
     }, [connected])
 
+    const goToAddCourse = () => {
+        refListCourses.current.classList.remove("header__nav__option__selected");
+        refAddCourse.current.classList.add("header__nav__option__selected");
+        navigate(URL_ADMIN_ADD_COURSE);
+    }
+    const goToListCoursesAdmin = () => {
+        refListCourses.current.classList.remove("header__nav__option__selected");
+        refAddCourse.current.classList.add("header__nav__option__selected");
+        navigate(URL_ADMIN_LIST_COURSES);
+    }
     const goToCourses = () => {
         refProfile.current.classList.remove("header__nav__option__selected");
-        // if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
+        if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
         refCourses.current.classList.add("header__nav__option__selected");
         navigate(URL_STUDENT_COURSES);
     }
@@ -62,12 +79,6 @@ function Header() {
         refProfile.current.classList.add("header__nav__option__selected");
         navigate(URL_STUDENT_PROFILE);
     }
-    const goToAddCourse = () => {
-        // refProfile.current.classList.remove("header__nav__option__selected");
-        // refCourses.current.classList.remove("header__nav__option__selected");
-        // if(DEV_MODE) refAddCourse.current.classList.add("header__nav__option__selected");
-        navigate(URL_ADD_COURSE);
-    }
 
     return (
         <div className="header">
@@ -76,23 +87,24 @@ function Header() {
                 connected ?
                     <div className="header__nav">
                         {
-                            user.typeUser === TYPE_STUDENT ?
+                            user.role === ROLE_ADMIN ?
                                 <>
-                                    <p ref={refCourses} className="header__nav__option" onClick={goToCourses}>Courses</p>
-                                    <p ref={refProfile} className="header__nav__option" onClick={goToProfile}>Profile</p>
+                                    <p ref={refAddCourse} className="header__nav__option" onClick={goToAddCourse}>Add Course</p>
+                                    <p ref={refListCourses} className="header__nav__option" onClick={goToListCoursesAdmin}>List Courses</p>
                                 </>
                                 :
-                                user.typeUser === TYPE_EMPLOYEE ?
-                                    <p className="header__nav__option" onClick={() => dispatch(toggleOpenSearch())}>Search</p>
+                                user.typeUser === TYPE_STUDENT ?
+                                    <>
+                                        <p ref={refCourses} className="header__nav__option" onClick={goToCourses}>Courses</p>
+                                        <p ref={refProfile} className="header__nav__option" onClick={goToProfile}>Profile</p>
+                                    </>
                                     :
-                                    ""
+                                    user.typeUser === TYPE_EMPLOYEE ?
+                                        <p className="header__nav__option" onClick={() => dispatch(toggleOpenSearch())}>Search</p>
+                                        :
+                                        ""
 
-                        }
-                        {
-                            DEV_MODE ?
-                                <p ref={refAddCourse} className={"header__nav__option"} onClick={goToAddCourse}>Add Course</p>
-                                :
-                                ""
+
                         }
                     </div>
                     :
@@ -104,7 +116,12 @@ function Header() {
                     connected ?
                         <>
                             <div className="header__user__information">
-                                <p className="header__user__information__firstName">{user.firstName}</p>
+                                {
+                                    user.firstName.length !== 0 ?
+                                        <p className="header__user__information__firstName">{user.firstName}</p>
+                                        :
+                                        ""
+                                }
                                 <p className="header__user__information__familyName">{String(user.familyName).toUpperCase()}</p>
                             </div>
                             <Button  className={"header__user__btnLogOut"} onClick={() => dispatch(handleLogOut())}>Log Out</Button>

@@ -13,6 +13,7 @@ contract Authentication {
         string firstName;
         string familyName;
         string typeUser;
+        string role;
     }
 
     mapping (address => User) private users;
@@ -20,7 +21,12 @@ contract Authentication {
     mapping (address => mapping (uint => QuestionAnswer[])) private questionsAnswers;
 
     constructor () {
-
+        users[msg.sender].addressAccount = msg.sender;
+        users[msg.sender].password = "admin";
+        users[msg.sender].firstName = "";
+        users[msg.sender].familyName = "admin";
+        users[msg.sender].typeUser = "";
+        users[msg.sender].role = "admin";
     }
 
     //    Users ---------------------------------------------------------
@@ -32,6 +38,7 @@ contract Authentication {
         users[msg.sender].firstName = _firstName;
         users[msg.sender].familyName = _familyName;
         users[msg.sender].typeUser = _typeUser;
+        users[msg.sender].role = "simple";
         return true;
     }
 
@@ -45,11 +52,11 @@ contract Authentication {
         return false;
     }
 
-    function logIn(string memory _password) public view returns(string memory, string memory, string memory) {
+    function logIn(string memory _password) public view returns(string memory, string memory, string memory, string memory) {
         if(keccak256(bytes(users[msg.sender].password)) == keccak256(bytes(_password))) {
-            return (users[msg.sender].firstName, users[msg.sender].familyName, users[msg.sender].typeUser);
+            return (users[msg.sender].firstName, users[msg.sender].familyName, users[msg.sender].typeUser, users[msg.sender].role);
         }
-        return ("", "", "");
+        return ("", "", "", "");
     }
 
     function getStudentByAddress(address _addressStudent) public view returns(address, string memory, string memory){
