@@ -3,15 +3,19 @@ import "./AddCourse.css"
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {selectLoadingUploadCourse, uploadFile} from "../setCourseSlice";
 import {Buffer} from "buffer";
 import LoadingButton from "@mui/lab/LoadingButton";
+import {selectLoadingUploadCourse} from "../adminSlice.js";
+import {baghdad} from "../../authentication/authenticationSlice";
+import {selectErrorUploadCourse, uploadCourseToBlockchain} from "../adminSlice";
+import Alert from "@mui/material/Alert";
 
 export const AddCourse = () => {
 
     const dispatch = useDispatch()
 
-    const loadingUploadCourse = useSelector(selectLoadingUploadCourse)
+    const loadingUploadCourse = useSelector(selectLoadingUploadCourse);
+    const errorUploadCourse = useSelector(selectErrorUploadCourse);
 
     const [title, setTitle] = useState("")
     const [resume, setResume] = useState("")
@@ -26,7 +30,12 @@ export const AddCourse = () => {
             const readeImage = new window.FileReader()
             readeImage.readAsArrayBuffer(refImage.current.files[0])
             readeImage.onloadend = () => {
-                dispatch(uploadFile({_title: title, _resume: resume, _bufferPdf: Buffer.from(readePdf.result), _bufferImage: Buffer.from((readeImage.result))}))
+                dispatch(uploadCourseToBlockchain({
+                    _title: title,
+                    _resume: resume,
+                    _bufferPdf: Buffer.from(readePdf.result),
+                    _bufferImage: Buffer.from((readeImage.result))
+                }))
             }
         }
     }
@@ -91,8 +100,14 @@ export const AddCourse = () => {
             <LoadingButton type={"submit"} loading={loadingUploadCourse} variant="contained"
                            className={"addCourse__upload"}
                            onClick={uploadNewCourse}
-                           // disabled={!title || !resume}
+                           disabled={!title || !resume}
             >Upload</LoadingButton>
+            {
+                errorUploadCourse.length !== 0 ?
+                    <Alert severity="error">{errorUploadCourse}</Alert>
+                    :
+                    ""
+            }
         </form>
     )
 }

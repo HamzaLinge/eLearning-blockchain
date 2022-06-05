@@ -2,14 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import authenticationReducer from "../features/authentication/authenticationSlice.js"
 import homeEmployerReducer from "../features/homeEmployer/homeEmployerSlice.js"
 import homeStudentReducer from "../features/homeStudent/homeStudentSlice.js"
-import setCoursesReducer from "../features/setCourse/setCourseSlice.js"
+import adminReducer from "../features/admin/adminSlice.js"
 
 export const store = configureStore({
   reducer: {
     authentication: authenticationReducer,
     homeEmployer: homeEmployerReducer,
     homeStudent: homeStudentReducer,
-    setCourse: setCoursesReducer,
+    admin: adminReducer,
   },
   middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
@@ -20,7 +20,7 @@ export const store = configureStore({
           ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
           // Ignore these paths in the state
           ignoredPaths: ['items.dates'],
-            serializableCheck: false
+          serializableCheck: false
         },
       }),
 });

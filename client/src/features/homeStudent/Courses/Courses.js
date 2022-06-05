@@ -9,7 +9,7 @@ import {
 } from "../homeStudentSlice";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
-import CardCourse from "./CardCourse/CardCourse";
+import CardCourse from "../../CardCourse/CardCourse";
 
 function Courses() {
 

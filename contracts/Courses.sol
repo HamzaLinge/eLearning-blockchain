@@ -13,7 +13,6 @@ contract Courses {
 
     constructor () {
         nbrCourses = 0;
-//        certifiedStudents[0].push(msg.sender);
     }
 
     struct Answer {

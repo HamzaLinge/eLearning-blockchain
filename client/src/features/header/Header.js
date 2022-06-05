@@ -46,6 +46,7 @@ function Header() {
         }
         if(user.role === ROLE_ADMIN){
             refListCourses.current.classList.add("header__nav__option__selected");
+            navigate(URL_ADMIN_LIST_COURSES);
 
         }else{
             if(user.typeUser === TYPE_EMPLOYEE) navigate(URL_EMPLOYER);
@@ -56,26 +57,24 @@ function Header() {
         }
     }, [connected])
 
+    const goToListCoursesAdmin = () => {
+        refAddCourse.current.classList.remove("header__nav__option__selected");
+        refListCourses.current.classList.add("header__nav__option__selected");
+        navigate(URL_ADMIN_LIST_COURSES);
+    }
     const goToAddCourse = () => {
         refListCourses.current.classList.remove("header__nav__option__selected");
         refAddCourse.current.classList.add("header__nav__option__selected");
         navigate(URL_ADMIN_ADD_COURSE);
     }
-    const goToListCoursesAdmin = () => {
-        refListCourses.current.classList.remove("header__nav__option__selected");
-        refAddCourse.current.classList.add("header__nav__option__selected");
-        navigate(URL_ADMIN_LIST_COURSES);
-    }
     const goToCourses = () => {
         refProfile.current.classList.remove("header__nav__option__selected");
-        if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
         refCourses.current.classList.add("header__nav__option__selected");
         navigate(URL_STUDENT_COURSES);
     }
 
     const goToProfile = () => {
         refCourses.current.classList.remove("header__nav__option__selected");
-        // if(DEV_MODE) refAddCourse.current.classList.remove("header__nav__option__selected");
         refProfile.current.classList.add("header__nav__option__selected");
         navigate(URL_STUDENT_PROFILE);
     }

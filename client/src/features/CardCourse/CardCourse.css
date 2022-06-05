@@ -10,9 +10,6 @@
     border-radius: 5px;
     transition: 0.3s;
 }
-.cardCourse:hover{
-    cursor: pointer;
-}
 .cardCourse__img{
     max-width: 100%;
     margin-bottom: 10px;

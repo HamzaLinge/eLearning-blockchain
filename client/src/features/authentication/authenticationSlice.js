@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import {AuthenticationContractAddress} from "../../config"
+import {AuthenticationContractAddress, ROLE_SIMPLE} from "../../config"
 import Authentication from "../../contracts/Authentication.json"
 import {ethers} from 'ethers'
 
@@ -38,7 +38,7 @@ export const signUp__blockchain = createAsyncThunk(
                 if(response) return {error: true, msg: "You're already signed up !"};
                 await contractAuthentication.signUp(signUpInputs.firstName, signUpInputs.familyName, signUpInputs.typeUser, signUpInputs.password)
                 // return {error: false, response: await contractAuthentication.logIn(signUpInputs.password)}
-                return {error: false, response: {firstName: signUpInputs.firstName, familyName: signUpInputs.familyName, typeUser: signUpInputs.typeUser}}
+                return {error: false, response: {firstName: signUpInputs.firstName, familyName: signUpInputs.familyName, typeUser: signUpInputs.typeUser, role: ROLE_SIMPLE}}
             } catch (e) {
                 console.log('Error sign up to blockchain : ', e);
                 // console.log("wesh")
@@ -64,6 +64,14 @@ export const logIn__blockchain = createAsyncThunk(
                 return {error: true, msg: "Error to log in to blockchain !"}
             }
         }
+    }
+)
+
+export const baghdad = createAsyncThunk(
+    'baghdad',
+    async () => {
+        console.log("wesh a zebi");
+        return {errorFlag: false, content: ""};
     }
 )
 
@@ -96,15 +104,12 @@ export const authenticationSlice = createSlice({
                 state.error.flag = true;
                 state.error.message = action.payload.msg;
             } else{
-                state.user.firstName = action.payload.response.firstName;
-                state.user.familyName = action.payload.response.familyName;
-                state.user.typeUser = action.payload.response.typeUser;
+                state.user = action.payload.response;
                 state.connected = true;
             }
             state.loading = false
         },
         [signUp__blockchain.rejected] : (state) => {
-            // console.log("rejected sign up")
             state.error.flag = true
             state.error.message = "Error signing up from the blockchain !"
             state.loading = false
@@ -123,6 +128,7 @@ export const authenticationSlice = createSlice({
                 state.user.firstName = action.payload.response[0];
                 state.user.familyName = action.payload.response[1];
                 state.user.typeUser = action.payload.response[2];
+                state.user.role = action.payload.response[3];
                 state.connected = true;
             }
             state.loading = false
