@@ -3,8 +3,6 @@ import {AuthenticationContractAddress, CoursesContractAddress, thresholdCertific
 import Courses from "../../contracts/Courses.json";
 import {ethers} from 'ethers';
 import Authentication from "../../contracts/Authentication.json";
-// import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-// const fs = require("graceful-fs");
 
 const initialState = {
     courses: [],
@@ -26,21 +24,6 @@ const initialState = {
 
     allMyCourses: [],
     loadAllMyCourses: false,
-}
-export async function setPDFCertificate(){
-    // const file = await fs.readFile("./template-certificate.pdf");
-    // console.log(file);
-    // const doc = await PDFDocument.load(file);
-    // const courierBoldFont = await doc.embedFont(StandardFonts.Courier);
-    // const firstPage = doc.getPage(0);
-    //
-    // firstPage.moveTo(72, 570);
-    // firstPage.drawText(new Date().toUTCString(), {
-    //     font: courierBoldFont,
-    //     size: 12,
-    // });
-    //
-    // await fs.writeFile("certificate-MotherFucker.pdf", await doc.save());
 }
 
 async function initialProviderAuthentication () {
@@ -119,10 +102,10 @@ export const saveAnswersToStudent = createAsyncThunk(
             const contractAuthentication = await initialProviderAuthentication();
             const contractCourses = await initialProviderCourses();
             try{
-                await contractAuthentication.addNewCourseToStudent(_idCourse, _idQuestions, _idAnswers);
                 const _questions = await contractCourses.getQuestionsOfCourse(_idCourse);
                 const _questionsAnswersStudent = await contractAuthentication.getQuestionsAnswersOfCourseForStudent(_idCourse);
                 const _myQuestionsAnswersStudent = [..._questionsAnswersStudent];
+                await contractAuthentication.addNewCourseToStudent(_idCourse, _idQuestions, _idAnswers);
                 for(let k = 0; k < _idQuestions.length; k++){
                     _myQuestionsAnswersStudent.push({idQuestion: _idQuestions[k], idAnswer: _idAnswers[k]});
                 }

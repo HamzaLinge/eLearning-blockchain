@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import {thresholdCertification, URL_CERTIFICATE} from "../../../config";
 import {selectAddressAccount, selectUser} from "../../authentication/authenticationSlice";
 import {useNavigate} from "react-router-dom";
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 
 function Profile() {
 
@@ -60,11 +61,11 @@ function Profile() {
                 <p onClick={selectCourses} ref={refAllCourses} className="profile__sideBar__option profile__sideBar__courses">
                     All my courses
                 </p>
-                <p onClick={selectCertifiedCourses} ref={refCertifiedCourses} className="profile__sideBar__option profile__sideBar__certifiedCourses">
-                    <span className="pointSymbol">&#8226;</span> Certified courses
-                </p>
                 <p onClick={selectInProgressCourses} ref={refInProgressCourses} className="profile__sideBar__option profile__sideBar__inProgressCourses">
                     <span className="pointSymbol">&#8226;</span> In progress courses
+                </p>
+                <p onClick={selectCertifiedCourses} ref={refCertifiedCourses} className="profile__sideBar__option profile__sideBar__certifiedCourses">
+                    <span className="pointSymbol">&#8226;</span> Certified courses
                 </p>
             </div>
             <div className="profile__main">
@@ -80,8 +81,8 @@ function Profile() {
                                     <p className="profile__main__table__header__head profile__main__table__header__number"></p>
                                     <p className="profile__main__table__header__head">Title</p>
                                     <p className="profile__main__table__header__head">Progress (%)</p>
-                                    {/*<p className="profile__main__table__header__head">Download Course (Pdf)</p>*/}
-                                    <p className="profile__main__table__header__head"></p>
+                                    <p className="profile__main__table__header__head">Download Course (Pdf)</p>
+                                    <p className="profile__main__table__header__head profile__main__table__header__certificate"></p>
                                 </div>
                                 {
                                     filtredCourses.map((course, indexCourse) => (
@@ -89,18 +90,18 @@ function Profile() {
                                             <p className="profile__main__table__row__cell">{indexCourse + 1}</p>
                                             <p className="profile__main__table__row__cell">{course.title}</p>
                                             <p className="profile__main__table__row__cell">{course.progress}</p>
-                                            {/*<p className="profile__main__table__row__cell">*/}
-                                            {/*    <IconButton className="cardCourse__links__link"*/}
-                                            {/*                variant="contained"*/}
-                                            {/*                color={"success"}*/}
-                                            {/*                size={"small"}*/}
-                                            {/*                onClick={() => {*/}
-                                            {/*                    window.open(`https://ipfs.io/ipfs/${course.urlPdf}`, "_blank")*/}
-                                            {/*                }}>*/}
-                                            {/*        <PictureAsPdfIcon fontSize="inherit" />*/}
-                                            {/*    </IconButton>*/}
-                                            {/*</p>*/}
                                             <p className="profile__main__table__row__cell">
+                                                <IconButton className="cardCourse__links__link"
+                                                            variant="contained"
+                                                            color={"success"}
+                                                            size={"small"}
+                                                            onClick={() => {
+                                                                window.open(`https://ipfs.io/ipfs/${course.urlPdf}`, "_blank")
+                                                            }}>
+                                                    <PictureAsPdfIcon fontSize="inherit" />
+                                                </IconButton>
+                                            </p>
+                                            <p className="profile__main__table__row__cell profile__main__table__row__certificate">
                                                 {
                                                     course.progress >= thresholdCertification ?
                                                         <IconButton className="cardCourse__links__link"
@@ -117,7 +118,7 @@ function Profile() {
                                                                             }
                                                                         })
                                                                     }}>
-                                                            <PictureAsPdfIcon fontSize="inherit" />
+                                                            <CardGiftcardIcon fontSize="inherit" />
                                                         </IconButton>
                                                         :
                                                         ""

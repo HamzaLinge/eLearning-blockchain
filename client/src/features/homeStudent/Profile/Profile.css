@@ -52,23 +52,28 @@
 .profile__main__table{
     display: flex;
     flex-direction: column;
-    /*width: 80%;*/
 }
 .profile__main__table__header{
     display: grid;
-    grid-template-columns: 30px 200px 200px 200px;
+    grid-template-columns: 30px 300px 200px 100px 50px;
     background-color: #FBFBFB;
     font-style: italic;
     padding: 10px;
     margin-bottom: 5px;
     border-radius: 5px;
+    font-size: 0.8rem;
+    align-items: center;
 }
 .profile__main__table__row{
     display: grid;
-    grid-template-columns: 30px 200px 200px 200px;
+    grid-template-columns: 30px 300px 200px 100px 50px;
     background-color: #FBFBFB;
     padding: 10px;
-    align-content: center;
+    align-items: center;
     border-radius: 5px;
     margin-bottom: 2px;
+}
+.profile__main__table__row__certificate{
+    text-align: center;
+    border-left: 1px solid black !important;
 }

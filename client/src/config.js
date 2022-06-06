@@ -1,9 +1,15 @@
-export const AuthenticationContractAddress = "0xbbF3b177EB5784A78Ad72dE5EB0C14AC5a107Ba3";
-export const CoursesContractAddress = "0x271492dAeb28152d1dc94D227b9039546f148059";
+export const AuthenticationContractAddress = "0x2466329a61D6096B2683E67A24d3EAb9a8e01118";
+export const CoursesContractAddress = "0x6a66f04ffFC7e6C513357F5bF7E0361E9177193f";
+
+export const platformName = "Blockchained Learning Certification";
+export const platformAcronym = "BCLC";
 
 export const TYPE_EMPLOYEE = "employer";
 export const TYPE_STUDENT = "student";
 
+export const URL_HOMEPAGE = "/"
+export const URL_LOGIN = "/login";
+export const URL_SIGNUP = "/signin";
 export const URL_STUDENT_COURSES = "/student/courses";
 export const URL_STUDENT_PROFILE = "/student/profile";
 export const URL_EMPLOYER = "/employer";

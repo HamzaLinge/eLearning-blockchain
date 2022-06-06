@@ -67,14 +67,6 @@ export const logIn__blockchain = createAsyncThunk(
     }
 )
 
-export const baghdad = createAsyncThunk(
-    'baghdad',
-    async () => {
-        console.log("wesh a zebi");
-        return {errorFlag: false, content: ""};
-    }
-)
-
 export const authenticationSlice = createSlice({
     name: 'authentication',
     initialState,

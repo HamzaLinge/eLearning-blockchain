@@ -3,13 +3,13 @@ import "./AddQcm.css";
 import Modal from "@mui/material/Modal";
 import {useDispatch, useSelector} from "react-redux";
 import {selectIdCourse, selectOpenAddQcm, toggleAddQcm, uploadQuestionAnswersOfCourse} from "../adminSlice";
-import {qcm} from "../../setCourse/datas/course_1/course_1_qcm";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
+import {qcm} from "../../setCourse/datas/course_1/course_1_qcm";
 
 function AddQcm ()  {
 
@@ -35,25 +35,25 @@ function AddQcm ()  {
     const [answerText5, setAnswerText5] = useState("");
     const [answerFlag5, setAnswerFlag5] = useState();
 
-    const submitQuestionAnswers = () => {
-        const _answers = [answerText1, answerText2, answerText3, answerText4];
-        const _flags = [answerFlag1, answerFlag2, answerFlag3, answerFlag4];
-        if(answerText5) {
-            _answers.push(answerText5);
-            _flags.push(answerFlag5);
-        }
-        dispatch(uploadQuestionAnswersOfCourse({_idCourse, _question, _answers, _flags}))
-    }
-
     // const submitQuestionAnswers = () => {
-    //     const _QCM = qcm;
-    //     _QCM.forEach((q) => {
-    //         const _question = q.question;
-    //         const _answers = q.answers;
-    //         const _flags = q.flags;
-    //         dispatch(uploadQuestionAnswersOfCourse({_idCourse, _question, _answers, _flags}));
-    //     })
+    //     const _answers = [answerText1, answerText2, answerText3, answerText4];
+    //     const _flags = [answerFlag1, answerFlag2, answerFlag3, answerFlag4];
+    //     if(answerText5) {
+    //         _answers.push(answerText5);
+    //         _flags.push(answerFlag5);
+    //     }
+    //     dispatch(uploadQuestionAnswersOfCourse({_idCourse, _question, _answers, _flags}))
     // }
+
+    const submitQuestionAnswers = () => {
+        const _QCM = qcm;
+        _QCM.forEach((q) => {
+            const _question = q.question;
+            const _answers = q.answers;
+            const _flags = q.flags;
+            dispatch(uploadQuestionAnswersOfCourse({_idCourse, _question, _answers, _flags}));
+        })
+    }
 
     return (
         <Modal
@@ -152,14 +152,14 @@ function AddQcm ()  {
 
                 <Button className="addQCM__submit" variant="contained"
                         onClick={submitQuestionAnswers}
-                        disabled={
-                            !_idCourse ||
-                            !_question ||
-                            !answerText1 ||
-                            !answerText2 ||
-                            !answerText3 ||
-                            !answerText4
-                        }
+                        // disabled={
+                        //     !_idCourse ||
+                        //     !_question ||
+                        //     !answerText1 ||
+                        //     !answerText2 ||
+                        //     !answerText3 ||
+                        //     !answerText4
+                        // }
                 >Submit</Button>
             </form>
         </Modal>

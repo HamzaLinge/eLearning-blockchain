@@ -4,23 +4,21 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     getAddressAccount,
     handleLogOut,
-    selectAddressAccount,
     selectConnected,
     selectUser
 } from "../authentication/authenticationSlice";
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import {
-    DEV_MODE, ROLE_ADMIN,
+    DEV_MODE, platformName, ROLE_ADMIN,
     TYPE_EMPLOYEE,
     TYPE_STUDENT,
     URL_ADMIN_ADD_COURSE, URL_ADMIN_LIST_COURSES,
-    URL_EMPLOYER,
+    URL_EMPLOYER, URL_HOMEPAGE, URL_LOGIN, URL_SIGNUP,
     URL_STUDENT_COURSES,
     URL_STUDENT_PROFILE
 } from "../../config";
 import {toggleOpenSearch} from "../homeEmployer/homeEmployerSlice";
-import {setPDFCertificate} from "../homeStudent/homeStudentSlice";
 
 function Header() {
 
@@ -41,7 +39,7 @@ function Header() {
 
     useEffect(() => {
         if(!connected) {
-            navigate("/");
+            navigate(URL_HOMEPAGE);
             return;
         }
         if(user.role === ROLE_ADMIN){
@@ -57,6 +55,11 @@ function Header() {
         }
     }, [connected])
 
+    const goToHomePage = () => {
+        const elem = document.querySelector(".header__nav__option__selected");
+        if(elem !== undefined) elem.classList.remove("header__nav__option__selected");
+        navigate(URL_HOMEPAGE);
+    }
     const goToListCoursesAdmin = () => {
         refAddCourse.current.classList.remove("header__nav__option__selected");
         refListCourses.current.classList.add("header__nav__option__selected");
@@ -81,7 +84,9 @@ function Header() {
 
     return (
         <div className="header">
-            <p className="header__title">E-Learning Chain</p>
+            <p className="header__title"
+               onClick={goToHomePage}
+            >{platformName}</p>
             {
                 connected ?
                     <div className="header__nav">
@@ -127,8 +132,8 @@ function Header() {
                         </>
                         :
                         <>
-                            <Button className={"header__user__btnLogIn"} onClick={() => navigate("/")}>Log In</Button>
-                            <Button className={"header__user__btnSignUp"} onClick={() => navigate("/signUp")}>Sign Up</Button>
+                            <Button className={"header__user__btnLogIn"} onClick={() => navigate(URL_LOGIN)}>Log In</Button>
+                            <Button className={"header__user__btnSignUp"} onClick={() => navigate(URL_SIGNUP)}>Sign Up</Button>
                         </>
                 }
             </div>

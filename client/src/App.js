@@ -10,8 +10,8 @@ import Profile from "./features/homeStudent/Profile/Profile";
 import {
     URL_ADMIN_ADD_COURSE, URL_ADMIN_LIST_COURSES,
     URL_CERTIFICATE,
-    URL_EMPLOYER,
-    URL_QCM,
+    URL_EMPLOYER, URL_HOMEPAGE, URL_LOGIN,
+    URL_QCM, URL_SIGNUP,
     URL_STUDENT_COURSES,
     URL_STUDENT_COURSES_COURSE,
     URL_STUDENT_PROFILE
@@ -23,6 +23,7 @@ import HomeEmployer from "./features/homeEmployer/HomeEmployer";
 import Certificate from "./features/homeStudent/certificate/Certificate";
 import ListCourses from "./features/admin/listCourses/ListCourses";
 import AddQcm from "./features/admin/addQcm/AddQcm";
+import HomePage from "./features/homePage/HomePage";
 
 
 function App() {
@@ -33,8 +34,10 @@ function App() {
           <div className={"app"}>
               <Routes>
 
-                  <Route path="/" element={<Login />} />
-                  <Route path="/signUp" element={<SignUp />} />
+                  <Route path={URL_HOMEPAGE} element={<HomePage />} />
+
+                  <Route path={URL_LOGIN} element={<Login />} />
+                  <Route path={URL_SIGNUP} element={<SignUp />} />
 
                   <Route path={URL_ADMIN_LIST_COURSES} element={<ListCourses />} />
                   <Route path={URL_ADMIN_ADD_COURSE} element={<AddCourse />} />

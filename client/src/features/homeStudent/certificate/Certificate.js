@@ -1,6 +1,7 @@
 import React from 'react';
 import "./Certificate.css";
 import {useLocation} from "react-router-dom";
+import {platformName} from "../../../config";
 
 function Certificate() {
 
@@ -18,7 +19,7 @@ function Certificate() {
                 This document declares <strong><i>{location.state.firstName} {location.state.familyName.toUpperCase()}</i></strong> to be certified in <strong>{location.state.titleCourse}</strong>.
             </p>
             <p className="certificate__text__II">
-                The Walid-eLearning platform guarantees the authenticity and validation of this certificate.
+                The {platformName} platform guarantees the authenticity and validation of this certificate.
             </p>
             {/*<p className="certificate__date">{getDateNow()}</p>*/}
         </div>
