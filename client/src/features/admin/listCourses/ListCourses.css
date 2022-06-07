@@ -1,11 +1,23 @@
 .listCourses{
     display: grid;
     grid-template-columns: auto auto auto;
+    column-gap: 30px;
     row-gap: 20px;
+    /*align-items: center;*/
+    justify-content: center;
+    width: 100%;
+    max-height: calc(100% - 50px);
+    overflow-y: auto;
+    position: relative;
+    align-content: space-evenly;
+}
+
+.listCourses__flex{
+    display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
     width: 100%;
-    position: relative;
 }
 .listCourses__empty{
     position: absolute;

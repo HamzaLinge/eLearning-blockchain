@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    position: relative;
 }
 .qcm__title{
     font-weight: bolder;
@@ -50,4 +51,20 @@
 }
 .qcm__main__btnNext, .qcm__main__btnSubmit, .qcm__main__btnCancel{
     width: 100px;
+}
+.qcm__notification{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.qcm__notification__success{
+    position: relative !important;
+    width: 400px !important;
+}
+.qcm__notification__success__btnCertification{
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translate(-50%, 200%) !important;
 }

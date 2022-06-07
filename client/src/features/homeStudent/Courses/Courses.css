@@ -1,9 +1,10 @@
 .courses{
     display: grid;
     grid-template-columns: auto auto auto;
+    column-gap: 30px;
     row-gap: 20px;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     width: 100%;
 }
 .courses__empty{

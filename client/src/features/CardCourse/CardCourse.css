@@ -9,6 +9,18 @@
     backdrop-filter: blur(5px);
     border-radius: 5px;
     transition: 0.3s;
+    position: relative;
+    animation: anime_cardCourse 0.5s forwards;
+}
+@keyframes anime_cardCourse {
+    0%{
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100%{
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 .cardCourse__img{
     max-width: 100%;

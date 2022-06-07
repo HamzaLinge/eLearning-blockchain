@@ -176,18 +176,19 @@ function Qcm() {
                 open={openResultQcm}
                 onClose={handleCloseResult}
             >
-                <Box sx={style}>
+                <div className={"qcm__notification"}>
                     {
                         resultQcm < thresholdCertification ?
-                            <Alert severity="info">
+                            <Alert severity="info" className={"qcm__notification__info"}>
                                 <AlertTitle>Result</AlertTitle>
                                 Your score is : <strong>{resultQcm} %</strong>
                             </Alert>
                             :
-                            <Alert severity="success" size="small">
+                            <Alert severity="success" className={"qcm__notification__success"} size="small">
                                 <AlertTitle>Result</AlertTitle>
                                 Your score is : <strong>{resultQcm} %</strong>
                                 <Button variant="contained"
+                                        className={"qcm__notification__success__btnCertification"}
                                         color="success"
                                         onClick={()=>navigate(URL_CERTIFICATE + "/" + location.state._idCourse,{
                                             state:{
@@ -204,7 +205,7 @@ function Qcm() {
                             </Alert>
                     }
 
-                </Box>
+                </div>
             </Modal>
         </div>
     );

@@ -25,7 +25,7 @@ function ListCourses() {
     }, [])
 
     return (
-        <div className="listCourses">
+        <div className={"listCourses"}>
             {
                 loadingListCourses ?
                     <CircularProgress />

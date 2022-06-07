@@ -57,7 +57,7 @@ function Header() {
 
     const goToHomePage = () => {
         const elem = document.querySelector(".header__nav__option__selected");
-        if(elem !== undefined) elem.classList.remove("header__nav__option__selected");
+        if(elem !== undefined && elem !== null) elem.classList.remove("header__nav__option__selected");
         navigate(URL_HOMEPAGE);
     }
     const goToListCoursesAdmin = () => {

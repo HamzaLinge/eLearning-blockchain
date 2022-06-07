@@ -7,21 +7,27 @@ function Certificate() {
 
     const location = useLocation();
 
-    function getDateNow() {
-        const date = new Date();
-        return date.toISOString().split("T")[0];
-    }
-
     return (
-        <div className="certificate">
-            <p className="certificate__title">Certificate</p>
+        <div className={"certificate"}>
+            <p className={"certificate__title"}>
+                <span className={"certification__title__char"}>C</span>
+                <span className={"certification__title__char"}>E</span>
+                <span className={"certification__title__char"}>R</span>
+                <span className={"certification__title__char"}>T</span>
+                <span className={"certification__title__char"}>I</span>
+                <span className={"certification__title__char"}>F</span>
+                <span className={"certification__title__char"}>I</span>
+                <span className={"certification__title__char"}>C</span>
+                <span className={"certification__title__char"}>A</span>
+                <span className={"certification__title__char"}>T</span>
+                <span className={"certification__title__char"}>E</span>
+            </p>
             <p className="certificate__text__I">
                 This document declares <strong><i>{location.state.firstName} {location.state.familyName.toUpperCase()}</i></strong> to be certified in <strong>{location.state.titleCourse}</strong>.
             </p>
             <p className="certificate__text__II">
                 The {platformName} platform guarantees the authenticity and validation of this certificate.
             </p>
-            {/*<p className="certificate__date">{getDateNow()}</p>*/}
         </div>
     );
 }
