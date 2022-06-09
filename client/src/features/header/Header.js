@@ -10,7 +10,7 @@ import {
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import {
-    DEV_MODE, platformName, ROLE_ADMIN,
+    DEV_MODE, platformAcronym, platformName, ROLE_ADMIN,
     TYPE_EMPLOYEE,
     TYPE_STUDENT,
     URL_ADMIN_ADD_COURSE, URL_ADMIN_LIST_COURSES,
@@ -84,9 +84,10 @@ function Header() {
 
     return (
         <div className="header">
-            <p className="header__title"
-               onClick={goToHomePage}
-            >{platformName}</p>
+            <div className="header__title" onClick={goToHomePage}>
+                <img className={"header__title__logo"} src={"../logo-white.png"} alt={""} />
+                <p className="header__title__text">{platformAcronym}</p>
+            </div>
             {
                 connected ?
                     <div className="header__nav">

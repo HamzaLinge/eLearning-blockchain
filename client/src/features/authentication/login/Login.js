@@ -14,7 +14,7 @@ import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-import {TYPE_EMPLOYEE, TYPE_STUDENT} from "../../../config";
+import {TYPE_EMPLOYEE, TYPE_STUDENT, URL_SIGNUP} from "../../../config";
 
 export const Login = () => {
 
@@ -27,15 +27,6 @@ export const Login = () => {
 
     const addressAccount = useSelector(selectAddressAccount)
     const [password, setPassword] = useState("")
-
-    const goToSignUp = (e) => {
-        e.preventDefault()
-        navigate("signUp")
-    }
-
-    const logIn = () => {
-        dispatch(logIn__blockchain(password))
-    }
 
     useEffect(() => {
         dispatch(resetError())
@@ -55,7 +46,7 @@ export const Login = () => {
             <LoadingButton type={"submit"} loading={loading} variant="contained"
                            className="signUp__btnLogIn"
                            disabled={!password}
-                           onClick={logIn}
+                           onClick={() => dispatch(logIn__blockchain(password))}
             >Log In</LoadingButton>
             {
                 error.flag ?
@@ -65,7 +56,7 @@ export const Login = () => {
             }
             <Button
                 className="logIn__btnSignUp"
-                onClick={goToSignUp}
+                onClick={() => navigate(URL_SIGNUP)}
                 size="small"
             >Sign Up</Button>
         </form>

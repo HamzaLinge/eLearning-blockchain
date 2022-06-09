@@ -73,7 +73,7 @@ export const SignUp = () => {
                         onChange={e => setTypeUser(e.target.value)}
                 >
                     <MenuItem value={TYPE_STUDENT}>Student</MenuItem>
-                    <MenuItem value={TYPE_EMPLOYEE}>Employee</MenuItem>
+                    <MenuItem value={TYPE_EMPLOYEE}>Employer</MenuItem>
                 </Select>
             </FormControl>
             <TextField className={"signUp__input"} label="Password" variant="outlined" type={"password"}
