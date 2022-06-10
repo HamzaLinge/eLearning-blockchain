@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import "./Header.css"
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -10,7 +10,7 @@ import {
 import Button from "@mui/material/Button";
 import {useNavigate} from "react-router-dom";
 import {
-    DEV_MODE, platformAcronym, platformName, ROLE_ADMIN,
+    platformAcronym, ROLE_ADMIN,
     TYPE_EMPLOYEE,
     TYPE_STUDENT,
     URL_ADMIN_ADD_COURSE, URL_ADMIN_LIST_COURSES,
@@ -19,6 +19,13 @@ import {
     URL_STUDENT_PROFILE
 } from "../../config";
 import {toggleOpenSearch} from "../homeEmployer/homeEmployerSlice";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from '@mui/icons-material/Menu';
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import HandshakeIcon from '@mui/icons-material/Handshake';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import ContactsIcon from '@mui/icons-material/Contacts';
 
 function Header() {
 
@@ -82,6 +89,15 @@ function Header() {
         navigate(URL_STUDENT_PROFILE);
     }
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleOpenMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <div className="header">
             <div className="header__title" onClick={goToHomePage}>
@@ -129,15 +145,47 @@ function Header() {
                                 }
                                 <p className="header__user__information__familyName">{String(user.familyName).toUpperCase()}</p>
                             </div>
-                            <Button  className={"header__user__btnLogOut"} onClick={() => dispatch(handleLogOut())}>Log Out</Button>
+                            <Button  className={"header__user__btn header__user__btnLogOut"} onClick={() => dispatch(handleLogOut())}>Log Out</Button>
                         </>
                         :
                         <>
-                            <Button className={"header__user__btnLogIn"} onClick={() => navigate(URL_LOGIN)}>Log In</Button>
-                            <Button className={"header__user__btnSignUp"} onClick={() => navigate(URL_SIGNUP)}>Sign Up</Button>
+                            <Button className={"header__user__btn header__user__btnLogIn"} onClick={() => navigate(URL_LOGIN)}>Log In</Button>
+                            <Button className={"header__user__btn header__user__btnSignUp"} onClick={() => navigate(URL_SIGNUP)}>Sign Up</Button>
                         </>
                 }
+                <IconButton
+                    id="basic-button"
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleOpenMenu}
+                    className={"header__user__btn"}
+                >
+                    <MenuIcon />
+                </IconButton>
             </div>
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleCloseMenu}
+                MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                }}
+            >
+                <MenuItem onClick={handleCloseMenu}>
+                    <AccountTreeIcon style={{"marginRight": "10px"}} fontSize={"small"}/>
+                    <span className={"header__menu__item__text"}>Our Programs</span>
+                </MenuItem>
+                <MenuItem onClick={handleCloseMenu}>
+                    <HandshakeIcon style={{"marginRight": "10px"}} fontSize={"small"}/>
+                    <span className={"header__menu__item__text"}>Our Partners</span>
+                </MenuItem>
+                <MenuItem onClick={handleCloseMenu}>
+                    <ContactsIcon style={{"marginRight": "10px"}} fontSize={"small"}/>
+                    <span className={"header__menu__item__text"}>Contact Us</span>
+                </MenuItem>
+            </Menu>
         </div>
     );
 }

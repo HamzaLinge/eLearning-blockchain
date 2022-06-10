@@ -12,6 +12,9 @@ function Certificate() {
 
     return (
         <div className={"certificate"}>
+            <div className="certificate__background">
+                <img src={"../../../../background-certificate.png"} alt={""} />
+            </div>
             <div className="certificate__main">
                 <p className="certificate__main__name">
                     {location.state.firstName} {location.state.familyName.toUpperCase()}

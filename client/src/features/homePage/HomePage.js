@@ -43,7 +43,7 @@ function HomePage() {
                                 <Button variant="outlined"
                                         className={"homePage__main__links__link"}
                                         onClick={() => navigate(URL_SIGNUP)}
-                                >Sign In</Button>
+                                >Sign Up</Button>
                             </>
                     }
                 </div>
