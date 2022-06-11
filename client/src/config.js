@@ -1,5 +1,5 @@
-export const AuthenticationContractAddress = "0x77eD73C156a2Ea9b82EF8df687159892e2406042";
-export const CoursesContractAddress = "0x7590979Ac66A8A6dF0Feaf1FCa0CB13753b5168c";
+export const AuthenticationContractAddress = "0xd7a28AE7CD7B24578BAe6343997751e39A5214cF";
+export const CoursesContractAddress = "0xb2c540098fd7e0A03554a873C6336Bc363E32cBD";
 
 export const platformName = "Blockchained Learning Certification";
 export const platformAcronym = "BCLC";
@@ -24,4 +24,9 @@ export const ROLE_SIMPLE = "simple";
 
 export const thresholdCertification = 70;
 
-export const DEV_MODE = true;
+export const imgPathArrayExported = [
+    "./images-homePage/img1.jpg",
+    "./images-homePage/img2.jpg",
+    "./images-homePage/img3.jpg",
+    "./images-homePage/img4.jpg"
+];
