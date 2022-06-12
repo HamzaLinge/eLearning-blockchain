@@ -14,7 +14,10 @@ import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-import {TYPE_EMPLOYEE, TYPE_STUDENT, URL_SIGNUP} from "../../../config";
+import {URL_SIGNUP} from "../../../config";
+import PasswordIcon from '@mui/icons-material/Password';
+import InputAdornment from "@mui/material/InputAdornment";
+import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 
 export const Login = () => {
 
@@ -38,10 +41,24 @@ export const Login = () => {
             <TextField className={"signUp__input"} label="Address Account" variant="standard"
                        value={addressAccount}
                        disabled={true}
+                       InputProps={{
+                           startAdornment: (
+                               <InputAdornment position="start">
+                                   <ImportContactsIcon />
+                               </InputAdornment>
+                           ),
+                       }}
             />
             <TextField className={"signUp__input"} label="Password" variant="outlined" type={"password"}
                        value={password}
                        onChange={e => setPassword(e.target.value)}
+                       InputProps={{
+                           startAdornment: (
+                               <InputAdornment position="start">
+                                   <PasswordIcon />
+                               </InputAdornment>
+                           ),
+                       }}
             />
             <LoadingButton type={"submit"} loading={loading} variant="contained"
                            className="signUp__btnLogIn"

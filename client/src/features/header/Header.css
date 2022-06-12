@@ -109,7 +109,7 @@
 .header__user__btn{
     color: blueviolet !important;
 }
-.MuiPaper-root{
+.header__menu .MuiPaper-root{
     background: linear-gradient(180deg, rgba(89,89,89,1) 0%, rgba(0,0,0,1) 100%);
     color: #FBFBFB !important;
 }

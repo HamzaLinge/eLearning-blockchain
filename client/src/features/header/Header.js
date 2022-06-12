@@ -26,6 +26,8 @@ import MenuItem from "@mui/material/MenuItem";
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ContactsIcon from '@mui/icons-material/Contacts';
+import LoginIcon from '@mui/icons-material/Login';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 function Header() {
 
@@ -149,8 +151,8 @@ function Header() {
                         </>
                         :
                         <>
-                            <Button className={"header__user__btn header__user__btnLogIn"} onClick={() => navigate(URL_LOGIN)}>Log In</Button>
-                            <Button className={"header__user__btn header__user__btnSignUp"} onClick={() => navigate(URL_SIGNUP)}>Sign Up</Button>
+                            <Button className={"header__user__btn header__user__btnLogIn"} onClick={() => navigate(URL_LOGIN)} startIcon={<LoginIcon />}>Log In</Button>
+                            <Button className={"header__user__btn header__user__btnSignUp"} onClick={() => navigate(URL_SIGNUP)} startIcon={<AssignmentIcon />}>Sign Up</Button>
                         </>
                 }
                 <IconButton
@@ -172,6 +174,7 @@ function Header() {
                 MenuListProps={{
                     'aria-labelledby': 'basic-button',
                 }}
+                className={"header__menu"}
             >
                 <MenuItem onClick={handleCloseMenu}>
                     <AccountTreeIcon style={{"marginRight": "10px"}} fontSize={"small"}/>

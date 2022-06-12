@@ -5,6 +5,8 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {handleLogOut, selectConnected} from "../authentication/authenticationSlice";
 import {imgPathArrayExported, URL_LOGIN, URL_SIGNUP} from "../../config";
+import LoginIcon from '@mui/icons-material/Login';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 function HomePage() {
 
@@ -21,27 +23,29 @@ function HomePage() {
     let rightDirection = true;
 
     useEffect(() => {
-        setInterval(() => {
-            const allSpan = document.querySelectorAll(".homePage__images__indicator span");
-            if(rightDirection){
-                allSpan[position].style.backgroundColor = "transparent";
-                position++;
-                if(position === imgPathArray.length - 1){
-                    rightDirection = !rightDirection;
+        setTimeout(() => {
+            setInterval(() => {
+                // const allSpan = document.querySelectorAll(".homePage__images__indicator span");
+                if(rightDirection){
+                    // allSpan[position].style.backgroundColor = "transparent";
+                    position++;
+                    if(position === imgPathArray.length - 1){
+                        rightDirection = !rightDirection;
+                    }
+                    document.querySelector(".homePage__images__wrapper").style.transform = 'translateX(-'+String(Math.abs(position * IMG_WIDTH))+'px)';
+                    // allSpan[position].style.backgroundColor = "#fbfbfb";
                 }
-                document.querySelector(".homePage__images__wrapper").style.transform = 'translateX(-'+String(Math.abs(position * IMG_WIDTH))+'px)';
-                allSpan[position].style.backgroundColor = "#fbfbfb";
-            }
-            else{
-                allSpan[position].style.backgroundColor = "transparent";
-                position--;
-                if(position === 0){
-                    rightDirection = !rightDirection;
+                else{
+                    // allSpan[position].style.backgroundColor = "transparent";
+                    position--;
+                    if(position === 0){
+                        rightDirection = !rightDirection;
+                    }
+                    document.querySelector(".homePage__images__wrapper").style.transform = 'translateX(-'+String(Math.abs(position * IMG_WIDTH))+'px)';
+                    // allSpan[position].style.backgroundColor = "#fbfbfb";
                 }
-                document.querySelector(".homePage__images__wrapper").style.transform = 'translateX(-'+String(Math.abs(position * IMG_WIDTH))+'px)';
-                allSpan[position].style.backgroundColor = "#fbfbfb";
-            }
-        }, 3000);
+            }, 3000);
+        }, 0)
     }, [])
 
     return (
@@ -56,11 +60,11 @@ function HomePage() {
                         ))
                     }
                 </div>
-                <div className="homePage__images__indicator">
-                    {
-                        imgPathArray.map(imgPath => (<span></span>))
-                    }
-                </div>
+                {/*<div className="homePage__images__indicator">*/}
+                {/*    {*/}
+                {/*        imgPathArray.map(imgPath => (<span></span>))*/}
+                {/*    }*/}
+                {/*</div>*/}
             </div>
             {/*<div className="homePage__title">*/}
             {/*    <p className="homePage__title__item homePage__title__blockchained">Blockchained</p>*/}
@@ -86,10 +90,12 @@ function HomePage() {
                                 <Button variant="outlined"
                                         className={"homePage__main__links__link"}
                                         onClick={() => navigate(URL_LOGIN)}
+                                        startIcon={<LoginIcon />}
                                 >Log In</Button>
                                 <Button variant="outlined"
                                         className={"homePage__main__links__link"}
                                         onClick={() => navigate(URL_SIGNUP)}
+                                        startIcon={<AssignmentIcon />}
                                 >Sign Up</Button>
                             </>
                     }
