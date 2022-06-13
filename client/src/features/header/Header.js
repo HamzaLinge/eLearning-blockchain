@@ -155,16 +155,16 @@ function Header() {
                             <Button className={"header__user__btn header__user__btnSignUp"} onClick={() => navigate(URL_SIGNUP)} startIcon={<AssignmentIcon />}>Sign Up</Button>
                         </>
                 }
-                <IconButton
-                    id="basic-button"
-                    aria-controls={open ? 'basic-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleOpenMenu}
-                    className={"header__user__btn"}
-                >
-                    <MenuIcon />
-                </IconButton>
+                {/*<IconButton*/}
+                {/*    id="basic-button"*/}
+                {/*    aria-controls={open ? 'basic-menu' : undefined}*/}
+                {/*    aria-haspopup="true"*/}
+                {/*    aria-expanded={open ? 'true' : undefined}*/}
+                {/*    onClick={handleOpenMenu}*/}
+                {/*    className={"header__user__btn"}*/}
+                {/*>*/}
+                {/*    <MenuIcon />*/}
+                {/*</IconButton>*/}
             </div>
             <Menu
                 id="basic-menu"
