@@ -32,7 +32,9 @@ function ListCourses() {
                     :
                     listCourses ?
                         listCourses.length === 0 ?
-                            <Alert className={"listCourses__empty"} severity="info">No courses available !</Alert>
+                            <div className="listCourses__empty">
+                                <Alert className={"listCourses__empty"} severity="info">No courses available !</Alert>
+                            </div>
                             :
                             listCourses.map((course,i) => (
                                <CardCourse key={i}

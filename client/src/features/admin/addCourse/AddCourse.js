@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react"
+import React, {useRef, useState} from "react"
 import "./AddCourse.css"
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {Buffer} from "buffer";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {selectLoadingUploadCourse} from "../adminSlice.js";
-import {baghdad} from "../../authentication/authenticationSlice";
 import {selectErrorUploadCourse, uploadCourseToBlockchain} from "../adminSlice";
 import Alert from "@mui/material/Alert";
 
@@ -38,35 +37,9 @@ export const AddCourse = () => {
                 }))
             }
         }
+        setTitle("");
+        setResume("");
     }
-
-    // const uploadCoursesFromJsonMetaData = e => {
-    //     e.preventDefault()
-    //     setLoadingUploadCourses(true)
-    //     courses_meta.forEach(courseMeta => {
-    //         console.log(pathCoursesMeta + courseMeta.path + "/" + courseMeta.path + ".pdf")
-    //         console.log(pathCoursesMeta + courseMeta.path + "/" + courseMeta.path + courseMeta.extImage)
-    //         const filePdf = new File(["arrayBuffer"], courseMeta.path + ".pdf")
-    //         const fileImage = new File(["arrayBuffer"], pathCoursesMeta + courseMeta.path + "/" + courseMeta.path + courseMeta.extImage)
-    //         console.log(filePdf)
-    //         console.log(fileImage)
-    //         const readerPdf = new window.FileReader()
-    //         readerPdf.readAsArrayBuffer(filePdf)
-    //         readerPdf.onloadend = () => {
-    //             const readerImage = new window.FileReader()
-    //             readerImage.readAsArrayBuffer(fileImage)
-    //             readerImage.onloadend = () => {
-    //                 dispatch(uploadFile({
-    //                     _title: courseMeta.title,
-    //                     _resume: courseMeta.resume,
-    //                     _bufferPdf: Buffer.from(readerPdf.result),
-    //                     _bufferImage: Buffer.from(readerImage.result)
-    //                 }))
-    //             }
-    //         }
-    //     })
-    //     setLoadingUploadCourses(false)
-    // }
 
     return (
         <form className={"addCourse"}>

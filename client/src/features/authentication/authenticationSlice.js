@@ -11,7 +11,9 @@ const initialState = {
     error: {
         flag: false,
         message: "",
-    }
+    },
+    verifyingUserBlockchain: true,
+    idSetInterval: null
 }
 
 async function initialProviderAuthentication () {
@@ -73,11 +75,26 @@ export const authenticationSlice = createSlice({
     reducers: {
         handleLogOut : state => {
             state.user = {};
+            localStorage.removeItem("userBlockchain");
             state.connected = false;
+        },
+        handleLogInFromLocalStorage: (state, action) => {
+            state.user = action.payload;
+            // state.verifyingUserBlockchain = false;
+            state.connected = true;
         },
         resetError : state => {
             state.error.flag = false;
             state.error.message = "";
+        },
+        setIdMyInterval : (state, action) => {
+            state.idSetInterval = action.payload;
+        },
+        clearMyInterval : state => {
+            clearInterval(state.idSetInterval);
+        },
+        stopVerifyingUserBlockchain: state => {
+            state.verifyingUserBlockchain = false;
         }
     },
     extraReducers: {
@@ -97,6 +114,8 @@ export const authenticationSlice = createSlice({
                 state.error.message = action.payload.msg;
             } else{
                 state.user = action.payload.response;
+                const userStorage = {addressAccount: state.addressAccount, ...state.user};
+                localStorage.setItem("userBlockchain", JSON.stringify(userStorage))
                 state.connected = true;
             }
             state.loading = false
@@ -121,6 +140,8 @@ export const authenticationSlice = createSlice({
                 state.user.familyName = action.payload.response[1];
                 state.user.typeUser = action.payload.response[2];
                 state.user.role = action.payload.response[3];
+                const userStorage = {addressAccount: state.addressAccount, ...state.user};
+                localStorage.setItem("userBlockchain", JSON.stringify(userStorage));
                 state.connected = true;
             }
             state.loading = false
@@ -133,12 +154,13 @@ export const authenticationSlice = createSlice({
     },
 });
 
-export const {handleLogOut, resetError} = authenticationSlice.actions;
+export const {handleLogOut, resetError, handleLogInFromLocalStorage, setIdMyInterval, clearMyInterval,stopVerifyingUserBlockchain} = authenticationSlice.actions;
 
 export const selectAddressAccount = state => state.authentication.addressAccount;
 export const selectUser = state => state.authentication.user;
 export const selectLoading = state => state.authentication.loading;
 export const selectError = state => state.authentication.error;
 export const selectConnected = state => state.authentication.connected;
+export const selectVerifyingUserBlockchain = state => state.authentication.verifyingUserBlockchain;
 
 export default authenticationSlice.reducer;

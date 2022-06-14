@@ -55,6 +55,7 @@ export const uploadCourseToBlockchain = createAsyncThunk(
             try{
                 const hashPdf = await ipfs.add(_bufferPdf);
                 const hashImage = await ipfs.add(_bufferImage);
+                // console.log({_title, _resume, _hashPdf: hashPdf.path, _hashImage: hashImage.path})
                 await contractCourses.newCourse(_title, _resume, hashPdf.path, hashImage.path);
                 return {errorFlag: false, content: ""};
             } catch (e) {
@@ -98,7 +99,6 @@ export const adminSlice = createSlice({
             state.loadingListCourses = false;
         },
         [fetchListCourses.fulfilled]: (state, action) => {
-            console.log(action.payload.content);
             if(!action.payload.errorFlag) state.listCourses = action.payload.content;
             state.loadingListCourses = false;
         },

@@ -105,7 +105,6 @@ export const saveAnswersToStudent = createAsyncThunk(
                 const _questions = await contractCourses.getQuestionsOfCourse(_idCourse);
                 const _questionsAnswersStudent = await contractAuthentication.getQuestionsAnswersOfCourseForStudent(_idCourse);
                 const _myQuestionsAnswersStudent = [..._questionsAnswersStudent];
-                await contractAuthentication.addNewCourseToStudent(_idCourse, _idQuestions, _idAnswers);
                 for(let k = 0; k < _idQuestions.length; k++){
                     _myQuestionsAnswersStudent.push({idQuestion: _idQuestions[k], idAnswer: _idAnswers[k]});
                 }
@@ -115,8 +114,11 @@ export const saveAnswersToStudent = createAsyncThunk(
                     if(_answers[_myQuestionsAnswersStudent[_indexQuestion].idAnswer].flag) _totalRightAnswer++;
                 }
                 const progress = parseFloat(_totalRightAnswer * 100 / _questions.length).toFixed(2);
-                if(progress >= thresholdCertification){
-                    await contractCourses.addAddressCertifiedStudent(_idCourse, _addressAccount);
+                if(progress !== 0){
+                    await contractAuthentication.addNewCourseToStudent(_idCourse, _idQuestions, _idAnswers);
+                    if(progress >= thresholdCertification){
+                        await contractCourses.addAddressCertifiedStudent(_idCourse, _addressAccount);
+                    }
                 }
                 return {errorFlag: false, content: progress};
             } catch (e) {

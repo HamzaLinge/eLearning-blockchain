@@ -2,13 +2,14 @@ import React, {useEffect, useRef, useState} from 'react'
 import "./Header.css"
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getAddressAccount,
-    handleLogOut,
+    clearMyInterval,
+    getAddressAccount, handleLogInFromLocalStorage,
+    handleLogOut, selectAddressAccount,
     selectConnected,
     selectUser
 } from "../authentication/authenticationSlice";
 import Button from "@mui/material/Button";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {
     platformAcronym, ROLE_ADMIN,
     TYPE_EMPLOYEE,
@@ -33,9 +34,11 @@ function Header() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation()
 
     const user = useSelector(selectUser);
     const connected = useSelector(selectConnected);
+    const addressAccount = useSelector(selectAddressAccount);
 
     const refCourses = useRef();
     const refProfile = useRef();
@@ -43,8 +46,8 @@ function Header() {
     const refListCourses = useRef();
 
     useEffect(() => {
-        dispatch(getAddressAccount());
-    }, [])
+        if(location.pathname !== URL_HOMEPAGE) dispatch(clearMyInterval());
+    }, [location.pathname])
 
     useEffect(() => {
         if(!connected) {
@@ -62,7 +65,7 @@ function Header() {
                 navigate(URL_STUDENT_COURSES);
             }
         }
-    }, [connected])
+    }, [connected, addressAccount])
 
     const goToHomePage = () => {
         const elem = document.querySelector(".header__nav__option__selected");

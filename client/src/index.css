@@ -5,3 +5,9 @@
     position: relative;
     background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 50%, rgba(91,91,91,1) 100%);
 }
+.root__progress{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

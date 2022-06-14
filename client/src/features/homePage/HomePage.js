@@ -1,51 +1,44 @@
 import React, {useEffect} from 'react';
 import "./HomePage.css";
-import Button from "@mui/material/Button";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {handleLogOut, selectConnected} from "../authentication/authenticationSlice";
-import {imgPathArrayExported, URL_LOGIN, URL_SIGNUP} from "../../config";
-import LoginIcon from '@mui/icons-material/Login';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import {imgPathArrayExported} from "../../config";
+import {useDispatch} from "react-redux";
+import {setIdMyInterval} from "../authentication/authenticationSlice";
 
 function HomePage() {
 
     const IMG_WIDTH = 400;
 
-    const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const connected = useSelector(selectConnected);
 
     const imgPathArray = imgPathArrayExported; // imgPathArrayExported is from "config.js"
 
     let position = 0;
     let rightDirection = true;
 
+
     useEffect(() => {
-        setTimeout(() => {
-            setInterval(() => {
-                // const allSpan = document.querySelectorAll(".homePage__images__indicator span");
-                if(rightDirection){
-                    // allSpan[position].style.backgroundColor = "transparent";
-                    position++;
-                    if(position === imgPathArray.length - 1){
-                        rightDirection = !rightDirection;
-                    }
-                    document.querySelector(".homePage__images__wrapper").style.transform = 'translateX(-'+String(Math.abs(position * IMG_WIDTH))+'px)';
-                    // allSpan[position].style.backgroundColor = "#fbfbfb";
+        const idSetInterval = setInterval(() => {
+            // const allSpan = document.querySelectorAll(".homePage__images__indicator span");
+            if(rightDirection){
+                // allSpan[position].style.backgroundColor = "transparent";
+                position++;
+                if(position === imgPathArray.length - 1){
+                    rightDirection = !rightDirection;
                 }
-                else{
-                    // allSpan[position].style.backgroundColor = "transparent";
-                    position--;
-                    if(position === 0){
-                        rightDirection = !rightDirection;
-                    }
-                    document.querySelector(".homePage__images__wrapper").style.transform = 'translateX(-'+String(Math.abs(position * IMG_WIDTH))+'px)';
-                    // allSpan[position].style.backgroundColor = "#fbfbfb";
+                document.querySelector(".homePage__images__wrapper").style.transform = 'translateX(-'+String(Math.abs(position * IMG_WIDTH))+'px)';
+                // allSpan[position].style.backgroundColor = "#fbfbfb";
+            }
+            else{
+                // allSpan[position].style.backgroundColor = "transparent";
+                position--;
+                if(position === 0){
+                    rightDirection = !rightDirection;
                 }
-            }, 3000);
-        }, 0)
+                document.querySelector(".homePage__images__wrapper").style.transform = 'translateX(-'+String(Math.abs(position * IMG_WIDTH))+'px)';
+                // allSpan[position].style.backgroundColor = "#fbfbfb";
+            }
+        }, 3000);
+        dispatch(setIdMyInterval(idSetInterval));
     }, [])
 
     return (
@@ -53,8 +46,8 @@ function HomePage() {
             <div className="homePage__images">
                 <div className="homePage__images__wrapper">
                     {
-                        imgPathArray.map(imgPath => (
-                            <div className="homePage__images__wrapper__img">
+                        imgPathArray.map((imgPath, i) => (
+                            <div key={i} className="homePage__images__wrapper__img">
                                 <img src={imgPath} alt={imgPath}/>
                             </div>
                         ))
@@ -72,33 +65,14 @@ function HomePage() {
             {/*    <p className="homePage__title__item homePage__title__certification">Certification</p>*/}
             {/*</div>*/}
             <div className="homePage__main">
-                <div className="homePage__main__description">
+                <div className="homePage__main__text">
                     <strong>BCLC</strong> is a learning platform,
                     where at the end of the MCQ of a course,
                     you will obtain a certificate,
                     attesting to your acquired skills.
                 </div>
-                <div className="homePage__main__links">
-                    {
-                        connected ?
-                            <Button variant="outlined"
-                                    className={"homePage__main__links__link"}
-                                    onClick={() => dispatch(handleLogOut())}
-                            >Log Out</Button>
-                            :
-                            <>
-                                <Button variant="outlined"
-                                        className={"homePage__main__links__link"}
-                                        onClick={() => navigate(URL_LOGIN)}
-                                        startIcon={<LoginIcon />}
-                                >Log In</Button>
-                                <Button variant="outlined"
-                                        className={"homePage__main__links__link"}
-                                        onClick={() => navigate(URL_SIGNUP)}
-                                        startIcon={<AssignmentIcon />}
-                                >Sign Up</Button>
-                            </>
-                    }
+                <div className={"homePage__main__text"}>
+                    // Zone de texte
                 </div>
             </div>
         </div>
