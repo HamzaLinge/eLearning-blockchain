@@ -8,6 +8,7 @@ import {Routes} from "react-router";
 import Courses from "./features/homeStudent/Courses/Courses";
 import Profile from "./features/homeStudent/Profile/Profile";
 import {
+    URL_ABOUT,
     URL_ADMIN_ADD_COURSE, URL_ADMIN_LIST_COURSES,
     URL_CERTIFICATE,
     URL_EMPLOYER, URL_HOMEPAGE, URL_LOGIN,
@@ -31,6 +32,7 @@ import {
     handleLogInFromLocalStorage, selectAddressAccount,
     selectVerifyingUserBlockchain, stopVerifyingUserBlockchain
 } from "./features/authentication/authenticationSlice";
+import About from "./features/about/About";
 
 function App() {
 
@@ -84,6 +86,8 @@ function App() {
                               <Route path={URL_EMPLOYER} element={<HomeEmployer />} />
 
                               <Route path={URL_CERTIFICATE + "/:idCourse"} element={<Certificate />} />
+
+                              <Route path={URL_ABOUT} element={<About />} />
                           </Routes>
                       </div>
                   </>

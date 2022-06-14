@@ -3,7 +3,6 @@ import "./Header.css"
 import {useDispatch, useSelector} from "react-redux";
 import {
     clearMyInterval,
-    getAddressAccount, handleLogInFromLocalStorage,
     handleLogOut, selectAddressAccount,
     selectConnected,
     selectUser
@@ -13,15 +12,13 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {
     platformAcronym, ROLE_ADMIN,
     TYPE_EMPLOYEE,
-    TYPE_STUDENT,
+    TYPE_STUDENT, URL_ABOUT,
     URL_ADMIN_ADD_COURSE, URL_ADMIN_LIST_COURSES,
     URL_EMPLOYER, URL_HOMEPAGE, URL_LOGIN, URL_SIGNUP,
     URL_STUDENT_COURSES,
     URL_STUDENT_PROFILE
 } from "../../config";
 import {toggleOpenSearch} from "../homeEmployer/homeEmployerSlice";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from '@mui/icons-material/Menu';
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import HandshakeIcon from '@mui/icons-material/Handshake';
@@ -29,6 +26,8 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import LoginIcon from '@mui/icons-material/Login';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import LogoutIcon from '@mui/icons-material/Logout';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
 
 function Header() {
 
@@ -150,14 +149,34 @@ function Header() {
                                 }
                                 <p className="header__user__information__familyName">{String(user.familyName).toUpperCase()}</p>
                             </div>
-                            <Button  className={"header__user__btn header__user__btnLogOut"} onClick={() => dispatch(handleLogOut())}>Log Out</Button>
+                            <Button
+                                className={"header__user__btn header__user__btnLogOut"}
+                                onClick={() => dispatch(handleLogOut())}
+                                startIcon={<LogoutIcon/>}
+                                size="small"
+                            >Log Out</Button>
                         </>
                         :
                         <>
-                            <Button className={"header__user__btn header__user__btnLogIn"} onClick={() => navigate(URL_LOGIN)} startIcon={<LoginIcon />}>Log In</Button>
-                            <Button className={"header__user__btn header__user__btnSignUp"} onClick={() => navigate(URL_SIGNUP)} startIcon={<AssignmentIcon />}>Sign Up</Button>
+                            <Button
+                                className={"header__user__btn header__user__btnLogIn"}
+                                onClick={() => navigate(URL_LOGIN)}
+                                startIcon={<LoginIcon />}
+                                size="small"
+                            >Log In</Button>
+                            <Button
+                                className={"header__user__btn header__user__btnSignUp"}
+                                onClick={() => navigate(URL_SIGNUP)}
+                                startIcon={<AssignmentIcon />}
+                                size="small"
+                            >Sign Up</Button>
                         </>
                 }
+                <Button className={"header__user__btn header__user__btnContactUs"}
+                        onClick={() => navigate(URL_ABOUT)}
+                        startIcon={<ContactPageIcon />}
+                        size="small"
+                >About Us</Button>
                 {/*<IconButton*/}
                 {/*    id="basic-button"*/}
                 {/*    aria-controls={open ? 'basic-menu' : undefined}*/}

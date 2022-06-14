@@ -107,12 +107,17 @@
     pointer-events: none;
 }
 .header__user__btn{
-    color: blueviolet !important;
+    /*color: blueviolet !important;*/
+    color: #fbfbfb !important;
+    font-weight: normal !important;
+    /*text-transform: none !important;*/
+    width: 150px;
+    text-align: center;
 }
-/*.header__menu .MuiPaper-root{*/
-/*    background: linear-gradient(180deg, rgba(89,89,89,1) 0%, rgba(0,0,0,1) 100%);*/
-/*    color: #FBFBFB !important;*/
-/*}*/
+.header__menu .MuiPaper-root{
+    background: linear-gradient(180deg, rgba(89,89,89,1) 0%, rgba(0,0,0,1) 100%);
+    color: #FBFBFB !important;
+}
 .header__menu__item__text{
     font-size: 0.8rem !important;
 }
