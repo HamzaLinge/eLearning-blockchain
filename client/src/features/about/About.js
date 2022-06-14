@@ -1,6 +1,6 @@
 import React from 'react';
 import "./About.css";
-import {LINK_GITHUB, LINK_LINKEDIN, LINK_SEARCHGATE, ORCID_ID, PHONE_NUMBER} from "../../config";
+import {LINK_GITHUB, LINK_LINKEDIN, LINK_SEARCHGATE, ORCID_ID, PHONE_NUMBER, UNIV_ANNABA} from "../../config";
 
 function About() {
     return (
@@ -9,6 +9,10 @@ function About() {
                 <div className="about__contacts__contact">
                     <img src={"about/phone.png"} alt={""} className={"about__contacts__contact__img"} />
                     <p className="about__contacts__contact__text">{PHONE_NUMBER}</p>
+                </div>
+                <div className="about__contacts__contact">
+                    <img src={"about/univ-annaba.png"} alt={""} className={"about__contacts__contact__img"} />
+                    <p className="about__contacts__contact__text">{UNIV_ANNABA}</p>
                 </div>
                 <div className="about__contacts__contact">
                     <img src={"about/orcid.png"} alt={""} className={"about__contacts__contact__img"} />

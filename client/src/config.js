@@ -37,3 +37,4 @@ export const LINK_GITHUB = "https://github.com/walidkheroub";
 export const LINK_SEARCHGATE = "https://www.researchgate.net/profile/Walid-Kheroub";
 export const PHONE_NUMBER = "+213 554 545 513 / +213 560 800 700";
 export const ORCID_ID = "0000-0003-3041-9817";
+export const UNIV_ANNABA = "walid.kheroub@univ-annaba.org";

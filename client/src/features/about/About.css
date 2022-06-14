@@ -16,6 +16,7 @@
     width: 100%;
     transform: translateY(-50px);
     transition: 0.7s;
+    position: relative;
 }
 .about__links__link{
     width: 150px;
@@ -23,9 +24,11 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    transition: 0.3s;
 }
 .about__links__link:hover{
     cursor: pointer;
+    transform: translateY(-5px);
 }
 .about__links__link__img{
     max-width: 100%;

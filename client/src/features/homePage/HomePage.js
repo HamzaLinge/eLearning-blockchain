@@ -71,9 +71,9 @@ function HomePage() {
                     you will obtain a certificate,
                     attesting to your acquired skills.
                 </div>
-                <div className={"homePage__main__text"}>
-                    // Zone de texte
-                </div>
+                {/*<div className={"homePage__main__text"}>*/}
+                {/*    // Zone de texte*/}
+                {/*</div>*/}
             </div>
         </div>
     );
