@@ -15,7 +15,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import {qcm} from "../../setCourse/datas/course_1/course_1_qcm";
+// import {qcm} from "../../../../public/datas/course_1/course_1_qcm";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Alert from "@mui/material/Alert";
 

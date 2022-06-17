@@ -33,19 +33,27 @@ export const fetchCertifiedStudents = createAsyncThunk(
                 const ifCoursesIsEmpty = await contractCourses.ifCoursesIsEmpty();
                 if(ifCoursesIsEmpty) return {errorFlag: false, content: []};
                 const addresses = await contractCourses.getAddressesCertifiedStudentsByCourseID(_idCourse);
-                console.log(addresses);
                 if(addresses.length === 0) return {errorFlag: false, content: []};
                 let result = [];
+                const _firstNameReg = new RegExp(String(_firstName).toLowerCase(),'i');
+                const _familyNameReg = new RegExp(String(_familyName).toLowerCase(),'i');
                 for(let i = 0; i < addresses.length; i++){
                     const student = await contractAuthentication.getStudentByAddress(addresses[i]);
-                    if(String(student[1]).toLowerCase() === String(_firstName).toLowerCase() &&
-                        String(student[2]).toLowerCase() === String(_familyName).toLowerCase()){
+                    if(_firstNameReg.test(String(student[1])) && _familyNameReg.test(String(student[2]))){
                         result.push({
                             addressAccount: student[0],
                             firstName: student[1],
                             familyName: student[2]
                         });
                     }
+                    // if(String(student[1]).toLowerCase() === String(_firstName).toLowerCase() &&
+                    //     String(student[2]).toLowerCase() === String(_familyName).toLowerCase()){
+                    //     result.push({
+                    //         addressAccount: student[0],
+                    //         firstName: student[1],
+                    //         familyName: student[2]
+                    //     });
+                    // }
                 }
                 return {errorFlag: false, content: result};
             } catch (e) {

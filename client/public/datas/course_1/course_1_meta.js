@@ -1,4 +1,4 @@
-export const courses_meta = [
+export const course_1_meta = [
   {
     path: "course_1",
     title: "Informatique Générale",

@@ -122,7 +122,7 @@ function Search() {
                     type={"submit"}
                     variant="contained"
                     className={"search__button"}
-                    disabled={!idCourse || !firstName || !familyName}
+                    disabled={!idCourse || firstName.length < 3 || familyName.length < 3}
                     onClick={handleSearch}
                 >Search</Button>
             </form>

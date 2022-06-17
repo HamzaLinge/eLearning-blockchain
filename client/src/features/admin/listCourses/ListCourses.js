@@ -11,7 +11,7 @@ import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import CodeIcon from "@mui/icons-material/Code";
 import IconButton from "@mui/material/IconButton";
-import CardCourse from "../../CardCourse/CardCourse";
+import CardCourse from "../../cardCourse/CardCourse";
 
 function ListCourses() {
 

@@ -1,5 +1,5 @@
-export const AuthenticationContractAddress = "0x936204aa03e883CC2B5F721805E9661E6380A7D3";
-export const CoursesContractAddress = "0x9d4BD8D8EF3826d84c1Ef9297577d53d824bA216";
+export const AuthenticationContractAddress = "0x5cDAa221b4A46FC98A3105497A0Db02e063DC28d";
+export const CoursesContractAddress = "0x2255691DeD8Aa745d9cc64ACd540bfFAC8364f8F";
 
 export const platformName = "Blockchained Learning Certification";
 export const platformAcronym = "BCLC";

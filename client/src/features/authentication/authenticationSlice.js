@@ -75,12 +75,11 @@ export const authenticationSlice = createSlice({
     reducers: {
         handleLogOut : state => {
             state.user = {};
-            localStorage.removeItem("userBlockchain");
+            sessionStorage.removeItem("userBlockchain");
             state.connected = false;
         },
-        handleLogInFromLocalStorage: (state, action) => {
+        handleLogInFromSessionStorage: (state, action) => {
             state.user = action.payload;
-            // state.verifyingUserBlockchain = false;
             state.connected = true;
         },
         resetError : state => {
@@ -115,7 +114,7 @@ export const authenticationSlice = createSlice({
             } else{
                 state.user = action.payload.response;
                 const userStorage = {addressAccount: state.addressAccount, ...state.user};
-                localStorage.setItem("userBlockchain", JSON.stringify(userStorage))
+                sessionStorage.setItem("userBlockchain", JSON.stringify(userStorage))
                 state.connected = true;
             }
             state.loading = false
@@ -141,7 +140,7 @@ export const authenticationSlice = createSlice({
                 state.user.typeUser = action.payload.response[2];
                 state.user.role = action.payload.response[3];
                 const userStorage = {addressAccount: state.addressAccount, ...state.user};
-                localStorage.setItem("userBlockchain", JSON.stringify(userStorage));
+                sessionStorage.setItem("userBlockchain", JSON.stringify(userStorage));
                 state.connected = true;
             }
             state.loading = false
@@ -154,7 +153,7 @@ export const authenticationSlice = createSlice({
     },
 });
 
-export const {handleLogOut, resetError, handleLogInFromLocalStorage, setIdMyInterval, clearMyInterval,stopVerifyingUserBlockchain} = authenticationSlice.actions;
+export const {handleLogOut, resetError, handleLogInFromSessionStorage, setIdMyInterval, clearMyInterval,stopVerifyingUserBlockchain} = authenticationSlice.actions;
 
 export const selectAddressAccount = state => state.authentication.addressAccount;
 export const selectUser = state => state.authentication.user;

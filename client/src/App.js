@@ -29,7 +29,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getAddressAccount,
-    handleLogInFromLocalStorage, selectAddressAccount,
+    handleLogInFromSessionStorage, selectAddressAccount,
     selectVerifyingUserBlockchain, stopVerifyingUserBlockchain
 } from "./features/authentication/authenticationSlice";
 import About from "./features/about/About";
@@ -46,11 +46,11 @@ function App() {
     }, [])
 
     useEffect(() => {
-        const userStorage = JSON.parse(localStorage.getItem("userBlockchain"));
+        const userStorage = JSON.parse(sessionStorage.getItem("userBlockchain"));
         if(userStorage !== null){
             if(userStorage.addressAccount === addressAccount){
                 delete userStorage["addressAccount"];
-                dispatch(handleLogInFromLocalStorage(userStorage));
+                dispatch(handleLogInFromSessionStorage(userStorage));
             }
         }
         setTimeout(()=>{
