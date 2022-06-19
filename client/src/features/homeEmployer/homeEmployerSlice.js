@@ -34,11 +34,13 @@ export const fetchCertifiedStudents = createAsyncThunk(
                 if(ifCoursesIsEmpty) return {errorFlag: false, content: []};
                 const addresses = await contractCourses.getAddressesCertifiedStudentsByCourseID(_idCourse);
                 if(addresses.length === 0) return {errorFlag: false, content: []};
+                console.log(addresses)
                 let result = [];
                 const _firstNameReg = new RegExp(String(_firstName).toLowerCase(),'i');
                 const _familyNameReg = new RegExp(String(_familyName).toLowerCase(),'i');
                 for(let i = 0; i < addresses.length; i++){
                     const student = await contractAuthentication.getStudentByAddress(addresses[i]);
+                    console.log(student);
                     if(_firstNameReg.test(String(student[1])) && _familyNameReg.test(String(student[2]))){
                         result.push({
                             addressAccount: student[0],
